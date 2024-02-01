@@ -1,16 +1,12 @@
-# This is a sample Python script.
+from handlers import file, config
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+PATH_JSON = 'pipeline.json'
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    data = file.get_json_from_file(file_path=PATH_JSON)
+
+    # for item in data:
+    #     print(f"{item}: {data[item]}")
+
+    print(config.get_pipeline_nodes(pipe_config_data=data))

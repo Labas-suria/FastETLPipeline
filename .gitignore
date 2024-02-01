@@ -2,3 +2,5 @@
 *venv\
 *TEST_SOURCE
 pipeline_model.txt
+*__pycache__
+*.pyc
