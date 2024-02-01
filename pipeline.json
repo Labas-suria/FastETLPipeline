@@ -1,7 +1,6 @@
 {
   "extr_from_txt": {
     "class": "extract",
-    "order": 0,
     "type": "txt",
     "params": {
       "path": "TEST_SOURCE/TESTE.txt",
@@ -11,5 +10,16 @@
       "separator": [1,1,1,1]
     }
   },
-  "flow": "extr_from_txt->end"
+  "extr_from_txt2": {
+    "class": "extract",
+    "type": "txt",
+    "params": {
+      "path": "TEST_SOURCE/TESTE.txt",
+      "header_line": 0,
+      "first_line": 1,
+      "last_line": null,
+      "separator": [1,1,1,1]
+    }
+  },
+  "flow": "extr_from_txt->extr_from_txt2"
 }
