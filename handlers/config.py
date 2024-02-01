@@ -14,7 +14,7 @@ def get_pipeline_nodes(pipe_config_data: dict) -> list:
     if pipe_config_data is None:
         raise Exception("Pipeline config is invalid: dict is None.")
     if len(pipe_config_data) < 2:
-        raise Exception("Pipeline config is invalid: config must have at last 1 node.")
+        raise Exception("Pipeline config is invalid: config must have at last 1 node and flow string.")
     try:
         flow_str = pipe_config_data["flow"]
         nodes_order = flow_str.split('->')
