@@ -13,10 +13,10 @@ def get_json_from_file(file_path: str) -> dict:
         with open(file_path) as file:
             json_data = json.load(file)
     except FileNotFoundError as e:
-        print(f"Arquivo não encontrado: {e}")
+        print(f"Json file not Found: {e}")
         raise e
     except Exception as e:
-        print(f"deu ruim: {e}")
+        print(f"Error: {e}")
         json_data = {}
 
     return json_data
