@@ -10,8 +10,8 @@
       "separator": [1,1,1,1]
     }
   },
-  "extr_from_txt2": {
-    "class": "extract",
+  "transf_from_txt2": {
+    "class": "transform",
     "type": "txt",
     "params": {
       "path": "TEST_SOURCE/TESTE.txt",
@@ -21,5 +21,16 @@
       "separator": [1,1,1,1]
     }
   },
-  "flow": "extr_from_txt->extr_from_txt2"
+  "transf_from_txt3": {
+    "class": "transform",
+    "type": "txt",
+    "params": {
+      "path": "TEST_SOURCE/TESTE.txt",
+      "header_line": 0,
+      "first_line": 1,
+      "last_line": null,
+      "separator": [1,1,1,1]
+    }
+  },
+  "flow": "extr_from_txt->transf_from_txt2->transf_from_txt3"
 }
