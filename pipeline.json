@@ -11,7 +11,7 @@
     }
   },
   "transf_from_txt2": {
-    "class": "transform",
+    "class": "extract",
     "type": "txt",
     "params": {
       "path": "TEST_SOURCE/TESTE.txt",
