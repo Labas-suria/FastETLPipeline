@@ -4,9 +4,9 @@
     "type": "txt",
     "params": {
       "path": "TEST_SOURCE/TESTE.txt",
-      "header_line": 0,
+      "header_line": true,
       "first_line": 1,
-      "last_line": null,
+      "last_line": 4,
       "separator": [1,1,1,1]
     }
   },

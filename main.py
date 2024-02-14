@@ -8,4 +8,4 @@ if __name__ == '__main__':
     prep_config_data = config.get_pipeline_nodes(pipe_config_data=raw_config_data)
     pipe_class_list = config.classes_instantiator(list_pipe_config=prep_config_data)
 
-    print(pipe_class_list)
+    pipe_class_list[0].extract()
