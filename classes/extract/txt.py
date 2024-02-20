@@ -18,11 +18,13 @@ class TXT:
             if 'first_line' in kwargs:
                 self.first_line = kwargs['first_line']
             else:
-                raise Exception("To instantiate a TXT object, the first_line int must be provided.")
+                raise Exception("To instantiate a TXT object, the 'first_line' int must be provided.")
             if 'last_line' in kwargs:
                 self.last_line = kwargs['last_line']
             if 'separator' in kwargs:
                 self.separator = kwargs['separator']
+            else:
+                raise Exception("To instantiate a TXT object, the 'separator' int must be provided.")
         except Exception as e:
             print(f"Error in params: '{e}'")
 
@@ -53,13 +55,17 @@ class TXT:
             lines_list = []
             if self.header_line:
                 headers_line.append(file_lines[0].replace('\n', ''))
-            print(headers_line)
 
             for index in range(tmp_first_line, tmp_last_line):
                 lines_list.append(file_lines[index].replace('\n', ''))
-            print(lines_list)
+
+            return_list = []
+            headers_line = headers_line[0].split(self.separator)
+            return_list.append(headers_line)
+            for line in lines_list:
+                return_list.append(line.split(self.separator))
 
         except Exception as e:
             raise e
 
-
+        return return_list
