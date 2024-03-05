@@ -1,6 +1,6 @@
 class TXT:
     """
-    Class that abstract a .txt data extraction.
+    Class that abstract a .txt data manipulation.
     """
     def __init__(self, **kwargs):
         """kwargs = params dict in pipeline.json"""

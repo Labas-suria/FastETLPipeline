@@ -19,5 +19,12 @@
       "str_regex": "^a"
     }
   },
-  "flow": "extr_from_txt->transf1"
+  "csv_load": {
+    "class": "load",
+    "type": "csv",
+    "params": {
+      "file_path": "C:\\Users\\user\\Desktop\\teste.csv"
+    }
+  },
+  "flow": "extr_from_txt->transf1->csv_load"
 }

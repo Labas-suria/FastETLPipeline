@@ -1,5 +1,6 @@
 from classes.txt import TXT
 from classes.transform import Transform
+from classes.csv import CSV
 
 
 def execute(list_pipe_config: list):
@@ -37,6 +38,7 @@ def execute(list_pipe_config: list):
                         data_cache.append({"extracted": TXT(**node_params).extract()})
                     case _:
                         raise Exception(f"The node type '{node_type}' is not supported in extract class.")
+
             case 'transform':
                 tmp_extr_data = get_first_data_in_cached_data(data_type="extracted")
                 if tmp_extr_data is None:
@@ -47,6 +49,16 @@ def execute(list_pipe_config: list):
                         data_cache.append({"transformed": Transform(data=tmp_extr_data, **node_params).apply()})
                     case _:
                         raise Exception(f"The node type '{node_type}' is not supported in extract class.")
+
+            case 'load':
+                tmp_extr_data = get_first_data_in_cached_data(data_type="transformed")
+                if tmp_extr_data is None:
+                    raise Exception("No extracted data found to transform!")
+
+                match node_type:
+                    case 'csv':
+                        data_cache.append({"loaded": CSV(data=tmp_extr_data, **node_params).load()})
+
             case _:
                 raise Exception(f"The node class '{node_class}' is not supported in instantiator.")
 
