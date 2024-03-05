@@ -1,16 +1,29 @@
 from classes.txt import TXT
+from classes.transform import Transform
 
 
 def execute(list_pipe_config: list):
     """
-    Gets list with pipiline nodes in order, and returns a list with objects from classes for each node.
-
-    [{"extr_from_txt2": {"class": "extract","type": "txt",...}}] -> extract.txt.TXT obj
+    Gets list with pipiline nodes in order, and execute each step of pipeline.
 
     :param list_pipe_config: list with dict nodes sorted by "flow" string in config file.
-
-    :return: list with objects for each node. Ex: [extract.txt.TXT, transform.basics.Basics, load.microsoft.acess.Access]
     """
+    def get_first_data_in_cached_data(data_type: str) -> list:
+        """
+        Gets first data stored in data_cache for provided data_type, and remove it from cache.
+
+        :param data_type: "extracted" or "transformed"
+        :return: a data catched.
+        """
+        data = None
+
+        for index in range(0, len(data_cache)):
+            if data_type in data_cache[index].keys():
+                data = data_cache.pop(index)[data_type]
+                break
+
+        return data
+
     data_cache = []
     for node in list_pipe_config:
         node_name = list(node)[0]
@@ -25,7 +38,15 @@ def execute(list_pipe_config: list):
                     case _:
                         raise Exception(f"The node type '{node_type}' is not supported in extract class.")
             case 'transform':
-                pass
+                tmp_extr_data = get_first_data_in_cached_data(data_type="extracted")
+                if tmp_extr_data is None:
+                    raise Exception("No extracted data found to transform!")
+
+                match node_type:
+                    case 'default':
+                        data_cache.append({"transformed": Transform(data=tmp_extr_data, **node_params).apply()})
+                    case _:
+                        raise Exception(f"The node type '{node_type}' is not supported in extract class.")
             case _:
                 raise Exception(f"The node class '{node_class}' is not supported in instantiator.")
 
