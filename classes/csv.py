@@ -1,4 +1,13 @@
 import csv
+import logging
+import os
+from logging import config
+
+import main
+
+MAIN_PATH = os.path.dirname(main.__file__)
+config.fileConfig(os.path.join(MAIN_PATH, 'logging.conf'))
+logger = logging.getLogger(__name__)
 
 
 class CSV:
@@ -13,12 +22,17 @@ class CSV:
         if 'file_path' in kwargs:
             self.file_path = kwargs['file_path']
         else:
-            raise Exception("To instantiate a CSV object, the 'file_path' to file must be provided.")
+            e = Exception("To instantiate a CSV object, the 'file_path' to file must be provided.")
+            logger.error(e)
+            raise e
 
     def load(self):
-        with open(self.file_path, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerows(self.data)
-
-        print(str(self.data) + " carregado em: " + str(self.file_path))
+        try:
+            with open(self.file_path, 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerows(self.data)
+                logger.info(f"Data loaded in: {str(self.file_path)}")
+        except Exception as e:
+            logger.error(e)
+            raise
 
