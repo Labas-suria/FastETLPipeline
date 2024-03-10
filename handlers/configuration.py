@@ -36,7 +36,7 @@ def get_pipeline_nodes(pipe_config_data: dict) -> list:
             if node not in pipe_config_data.keys():
                 raise Exception(f"node '{node}' in flow string not exist in Pipeline config.")
             nodes_list.append({node: pipe_config_data[node]})
-            logger.info(f"Node '{node}' add to queue list.")
+            logger.info(f"Node '{node}' add to queue.")
     except KeyError as e:
         logger.error(f"Pipeline config is invalid: {e} not found in dict.")
         raise e

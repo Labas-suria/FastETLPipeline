@@ -31,7 +31,7 @@ class CSV:
             with open(self.file_path, 'w', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerows(self.data)
-                logger.info(f"Data loaded in: {str(self.file_path)}")
+                logger.info(f"Sourced data loaded in: {str(self.file_path)}")
         except Exception as e:
             logger.error(e)
             raise
