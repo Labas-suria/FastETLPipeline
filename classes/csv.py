@@ -36,4 +36,3 @@ class CSV:
         except Exception as e:
             logger.error(e)
             raise
-
