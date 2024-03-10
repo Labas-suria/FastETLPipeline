@@ -1,6 +1,15 @@
+import logging
+import os
+from logging import config
 from classes.txt import TXT
 from classes.transform import Transform
 from classes.csv import CSV
+
+import main
+
+MAIN_PATH = os.path.dirname(main.__file__)
+config.fileConfig(os.path.join(MAIN_PATH, 'logging.conf'), disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
 
 
 def execute(list_pipe_config: list):
