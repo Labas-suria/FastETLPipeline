@@ -1,3 +1,14 @@
+import logging
+import os
+from logging import config
+
+import main
+
+MAIN_PATH = os.path.dirname(main.__file__)
+config.fileConfig(os.path.join(MAIN_PATH, 'logging.conf'))
+logger = logging.getLogger(__name__)
+
+
 class TXT:
     """
     Class that abstract a .txt data manipulation.
@@ -26,7 +37,8 @@ class TXT:
             else:
                 raise Exception("To instantiate a TXT object, the 'separator' int must be provided.")
         except Exception as e:
-            print(f"Error in params: '{e}'")
+            logger.error(f"Error in params: '{e}'")
+            raise
 
     def extract(self) -> list:
         """
@@ -66,6 +78,9 @@ class TXT:
                 return_list.append(line.split(self.separator))
 
         except Exception as e:
-            raise e
+            logger.error(e)
+            raise
+
+        logger.info(f"Data extracted from {self.path}")
 
         return return_list
