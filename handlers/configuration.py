@@ -20,6 +20,7 @@ def get_pipeline_nodes(pipe_config_data: dict) -> list:
     :return: list with dict nodes sorted by "flow" string in config file.
     """
     nodes_list = []
+    nodes_names_list = []
     if pipe_config_data is None:
         e = Exception("Pipeline config is invalid: dict is None.")
         logger.error(e)
@@ -36,9 +37,10 @@ def get_pipeline_nodes(pipe_config_data: dict) -> list:
             if node not in pipe_config_data.keys():
                 raise Exception(f"node '{node}' in flow string not exist in Pipeline config.")
             nodes_list.append({node: pipe_config_data[node]})
-            logger.info(f"Node '{node}' add to queue.")
+            nodes_names_list.append(node)
     except KeyError as e:
         logger.error(f"Pipeline config is invalid: {e} not found in dict.")
         raise e
 
+    logger.info(f"The '{nodes_names_list}' flow was sourced!")
     return nodes_list
