@@ -26,5 +26,13 @@
       "file_path": "C:\\Users\\user\\Desktop\\teste.csv"
     }
   },
-  "flow": "extr_from_txt->transf1->csv_load"
+  "conector_teste": {
+    "class": "extract",
+    "type": "connector",
+    "params": {
+      "script_import": "CONNECTORS_SOURCE.merge_conector",
+      "class_name": "MergeConector"
+    }
+  },
+  "flow": "extr_from_txt->conector_teste"
 }

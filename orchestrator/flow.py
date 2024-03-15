@@ -49,9 +49,24 @@ def execute(list_pipe_config: list):
                     match node_type:
                         case 'txt':
                             data_cache.append({"extracted": TXT(**node_params).extract()})
+                        case 'connector':
+                            if 'script_import' not in node_params.keys() or 'class_name' not in node_params.keys():
+                                raise Exception("The 'script_import' and 'class_name' params must be sourced!")
+                            script_import = node_params['script_import']
+                            class_name = node_params['class_name']
+                            script_import_list = script_import.split(".")
+                            script_name = script_import_list[len(script_import_list) - 1]
+
+                            imp = __import__(script_import)
+                            imp_class = getattr(getattr(imp, script_name), class_name)
+                            extrct_data = imp_class(**node_params).extract()
+
+                            if type(extrct_data) is not list:
+                                raise Exception("The connector returned data must be a list!")
+
+                            data_cache.append({"extracted": extrct_data})
                         case _:
                             raise Exception(f"The node type '{node_type}' is not supported in extract class.")
-
                 case 'transform':
                     tmp_extr_data = get_first_data_in_cached_data(data_type="extracted")
                     if tmp_extr_data is None:
@@ -66,7 +81,7 @@ def execute(list_pipe_config: list):
                 case 'load':
                     tmp_extr_data = get_first_data_in_cached_data(data_type="transformed")
                     if tmp_extr_data is None:
-                        raise Exception("No extracted data found to transform!")
+                        raise Exception("No transformed data found to load!")
 
                     match node_type:
                         case 'csv':
