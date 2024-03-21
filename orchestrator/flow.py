@@ -1,15 +1,36 @@
 import logging
 import os
 from logging import config
+
 from classes.txt import TXT
 from classes.transform import Transform
 from classes.csv import CSV
+from abstract_connectors.interfaces import AbstractTransform, AbstractExtract, AbstractLoad
 
 import main
 
 MAIN_PATH = os.path.dirname(main.__file__)
 config.fileConfig(os.path.join(MAIN_PATH, 'logging.conf'), disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
+
+
+def __conector_caller(node_params: dict):
+    try:
+        script_import = node_params['script_import']
+        class_name = node_params['class_name']
+        script_import_list = script_import.split(".")
+        script_name = script_import_list[len(script_import_list) - 1]
+
+        imp = __import__(script_import)
+        imp_class = getattr(getattr(imp, script_name), class_name)
+        if type(imp_class(**node_params)).__base__ not in [AbstractTransform, AbstractExtract, AbstractLoad]:
+            raise Exception("The Conector must extends: AbstractTransform, AbstractExtract or AbstractLoad classes")
+
+    except Exception as e:
+        logger.error(e)
+        raise
+
+    return imp_class
 
 
 def execute(list_pipe_config: list):
@@ -52,13 +73,7 @@ def execute(list_pipe_config: list):
                         case 'connector':
                             if 'script_import' not in node_params.keys() or 'class_name' not in node_params.keys():
                                 raise Exception("The 'script_import' and 'class_name' params must be sourced!")
-                            script_import = node_params['script_import']
-                            class_name = node_params['class_name']
-                            script_import_list = script_import.split(".")
-                            script_name = script_import_list[len(script_import_list) - 1]
-
-                            imp = __import__(script_import)
-                            imp_class = getattr(getattr(imp, script_name), class_name)
+                            imp_class = __conector_caller(node_params=node_params)
                             extrct_data = imp_class(**node_params).extract()
 
                             if type(extrct_data) is not list:
