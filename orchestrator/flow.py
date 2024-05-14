@@ -23,7 +23,7 @@ def __conector_caller(node_params: dict):
 
         imp = __import__(script_import)
         imp_class = getattr(getattr(imp, script_name), class_name)
-        if type(imp_class(**node_params)).__base__ not in [AbstractTransform, AbstractExtract, AbstractLoad]:
+        if type(imp_class(data=None, **node_params)).__base__ not in [AbstractTransform, AbstractExtract, AbstractLoad]:
             raise Exception("The Conector must extends: AbstractTransform, AbstractExtract or AbstractLoad classes")
 
     except Exception as e:
@@ -90,6 +90,17 @@ def execute(list_pipe_config: list):
                     match node_type:
                         case 'default':
                             data_cache.append({"transformed": Transform(data=tmp_extr_data, **node_params).apply()})
+                        case 'connector':
+                            if 'script_import' not in node_params.keys() or 'class_name' not in node_params.keys():
+                                raise Exception("The 'script_import' and 'class_name' params must be sourced!")
+                            imp_class = __conector_caller(node_params=node_params)
+                            transf_data = imp_class(data=tmp_extr_data, **node_params).apply()
+
+                            if type(transf_data) is not list:
+                                raise Exception("The connector returned data must be a list!")
+
+                            data_cache.append({"transformed": transf_data})
+
                         case _:
                             raise Exception(f"The node type '{node_type}' is not supported in extract class.")
 

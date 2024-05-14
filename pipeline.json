@@ -26,7 +26,7 @@
       "file_path": "C:\\Users\\user\\Desktop\\teste.csv"
     }
   },
-  "conector_teste": {
+  "conector_extract_teste": {
     "class": "extract",
     "type": "connector",
     "params": {
@@ -34,5 +34,14 @@
       "class_name": "MergeConector"
     }
   },
-  "flow": "extr_from_txt->conector_teste"
+  "conector_transform_teste": {
+    "class": "transform",
+    "type": "connector",
+    "params": {
+      "script_import": "CONNECTORS_SOURCE.transf_conector",
+      "class_name": "TransformClass"
+    }
+  },
+  "flow": "extr_from_txt->conector_transform_teste"
 }
+

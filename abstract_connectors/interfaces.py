@@ -7,14 +7,14 @@ class AbstractExtract(ABC):
         pass
 
     @abstractmethod
-    def extract(self) -> list:
+    def extract(self, data: list) -> list:
         pass
 
 
 class AbstractTransform(ABC):
     @abstractmethod
-    def __init__(self, **kwargs):
-        pass
+    def __init__(self, data: list, **kwargs):
+        self.data = data
 
     @abstractmethod
     def apply(self) -> list:
