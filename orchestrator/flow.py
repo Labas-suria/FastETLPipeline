@@ -113,6 +113,14 @@ def execute(list_pipe_config: list):
                         case 'csv':
                             data_cache.append({"loaded": CSV(data=tmp_extr_data, **node_params).load()})
 
+                        case 'connector':
+                            if 'script_import' not in node_params.keys() or 'class_name' not in node_params.keys():
+                                raise Exception("The 'script_import' and 'class_name' params must be sourced!")
+                            imp_class = __conector_caller(node_params=node_params)
+                            transf_data = imp_class(data=tmp_extr_data, **node_params).load()
+
+                            data_cache.append({"loaded": transf_data})
+
                 case _:
                     raise Exception(f"The node class '{node_class}' is not supported in instantiator.")
 

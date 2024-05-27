@@ -42,6 +42,14 @@
       "class_name": "TransformClass"
     }
   },
-  "flow": "extr_from_txt->conector_transform_teste"
+  "conector_load_teste": {
+    "class": "load",
+    "type": "connector",
+    "params": {
+      "script_import": "CONNECTORS_SOURCE.load_connector",
+      "class_name": "LoadClass"
+    }
+  },
+  "flow": "extr_from_txt->conector_transform_teste->conector_load_teste"
 }
 

@@ -23,8 +23,8 @@ class AbstractTransform(ABC):
 
 class AbstractLoad(ABC):
     @abstractmethod
-    def __init__(self, **kwargs):
-        pass
+    def __init__(self,  data: list, **kwargs):
+        self.data = data
 
     @abstractmethod
     def load(self):
