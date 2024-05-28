@@ -19,7 +19,7 @@ def get_json_from_file(file_path: str) -> dict:
     :return: .json data as a dictionary.
     """
     try:
-        with open(file_path) as file:
+        with open(file_path, encoding='utf-8') as file:
             json_data = json.load(file)
     except FileNotFoundError as e:
         logger.error(f"Json file not Found: {e}")

@@ -5,3 +5,5 @@ pipeline_model.txt
 *__pycache__
 *.pyc
 *.log
+credentials.json
+token.json

@@ -50,6 +50,23 @@
       "class_name": "LoadClass"
     }
   },
-  "flow": "extr_from_txt->conector_transform_teste->conector_load_teste"
+  "extrct_g_sheet": {
+    "class": "extract",
+    "type": "g_sheets",
+    "params": {
+      "sheet_id": "1Io4HTrZI2NhGY6RXYOTnNYRKhCCVngmCRML6EEp8YPs",
+      "extract_range": "Página1!A:AZ"
+    }
+  },
+  "load_g_sheet": {
+    "class": "load",
+    "type": "g_sheets",
+    "params": {
+      "sheet_id": "1Io4HTrZI2NhGY6RXYOTnNYRKhCCVngmCRML6EEp8YPs",
+      "update_range": "out!A:AZ"
+    }
+  },
+
+  "flow": "extrct_g_sheet->conector_transform_teste->load_g_sheet"
 }
 

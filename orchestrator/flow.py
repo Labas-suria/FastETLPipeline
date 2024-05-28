@@ -5,6 +5,8 @@ from logging import config
 from classes.txt import TXT
 from classes.transform import Transform
 from classes.csv import CSV
+from classes.g_workspace import auth
+from classes.g_workspace.sheets import Sheets
 from abstract_connectors.interfaces import AbstractTransform, AbstractExtract, AbstractLoad
 
 import main
@@ -80,6 +82,11 @@ def execute(list_pipe_config: list):
                                 raise Exception("The connector returned data must be a list!")
 
                             data_cache.append({"extracted": extrct_data})
+
+                        case 'g_sheets':
+                            creds = auth.run()
+                            data_cache.append({"extracted": Sheets(creds=creds, **node_params).extract(**node_params)})
+
                         case _:
                             raise Exception(f"The node type '{node_type}' is not supported in extract class.")
                 case 'transform':
@@ -120,6 +127,11 @@ def execute(list_pipe_config: list):
                             transf_data = imp_class(data=tmp_extr_data, **node_params).load()
 
                             data_cache.append({"loaded": transf_data})
+
+                        case 'g_sheets':
+                            creds = auth.run()
+                            data_cache.append({"loaded": Sheets(creds=creds, **node_params).load(data=tmp_extr_data,
+                                                                                                 **node_params)})
 
                 case _:
                     raise Exception(f"The node class '{node_class}' is not supported in instantiator.")

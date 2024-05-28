@@ -6,6 +6,8 @@ import CONNECTORS_SOURCE.merge_conector
 from handlers import file, configuration
 from orchestrator import flow
 
+from classes.g_workspace import auth
+
 MAIN_PATH = os.path.dirname(__file__)
 config.fileConfig(os.path.join(MAIN_PATH, 'logging.conf'), disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
