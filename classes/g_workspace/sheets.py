@@ -93,4 +93,4 @@ class Sheets:
             data = values
         except HttpError as err:
             logger.error(err)
-        return data[0]
+        return data
