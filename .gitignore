@@ -7,3 +7,4 @@ pipeline_model.txt
 *.log
 credentials.json
 token.json
+mysql_config.json

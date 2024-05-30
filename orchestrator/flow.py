@@ -7,6 +7,7 @@ from classes.transform import Transform
 from classes.csv import CSV
 from classes.g_workspace import auth
 from classes.g_workspace.sheets import Sheets
+from classes.mysql_db import MySQL
 from abstract_connectors.interfaces import AbstractTransform, AbstractExtract, AbstractLoad
 
 import main
@@ -87,6 +88,9 @@ def execute(list_pipe_config: list):
                             creds = auth.run()
                             data_cache.append({"extracted": Sheets(creds=creds, **node_params).extract(**node_params)})
 
+                        case 'mysql':
+                            data_cache.append({"extracted": MySQL().extract(**node_params)})
+
                         case _:
                             raise Exception(f"The node type '{node_type}' is not supported in extract class.")
                 case 'transform':
@@ -107,6 +111,9 @@ def execute(list_pipe_config: list):
                                 raise Exception("The connector returned data must be a list!")
 
                             data_cache.append({"transformed": transf_data})
+
+                        case 'void':
+                            data_cache.append({"transformed": tmp_extr_data})
 
                         case _:
                             raise Exception(f"The node type '{node_type}' is not supported in extract class.")
@@ -132,6 +139,8 @@ def execute(list_pipe_config: list):
                             creds = auth.run()
                             data_cache.append({"loaded": Sheets(creds=creds, **node_params).load(data=tmp_extr_data,
                                                                                                  **node_params)})
+                        case 'mysql':
+                            data_cache.append({"loaded": MySQL().load(data=tmp_extr_data, **node_params)})
 
                 case _:
                     raise Exception(f"The node class '{node_class}' is not supported in instantiator.")

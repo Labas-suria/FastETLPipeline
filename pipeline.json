@@ -83,7 +83,28 @@
       "sql_query": ""
     }
   },
+  "extrct_mysql": {
+    "class": "extract",
+    "type": "mysql",
+    "params": {
+      "sql_query": "SELECT * FROM test;"
+    }
+  },
+  "load_mysql": {
+    "class": "load",
+    "type": "mysql",
+    "params": {
+      "db_file_path": "",
+      "table_name": "test_input",
+      "headers": ["name", "idade"]
+    }
+  },
+  "void_transform": {
+    "class": "transform",
+    "type": "void",
+    "params": {}
+  },
 
-  "flow": "extrct_g_sheet->conector_transform_teste->load_g_sheet"
+  "flow": "extrct_g_sheet->void_transform->load_mysql"
 }
 
