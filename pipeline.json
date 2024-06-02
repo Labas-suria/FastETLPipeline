@@ -1,4 +1,27 @@
 {
-  "flow": ""
+  "connector_txt_scrap": {
+    "class": "extract",
+    "type": "connector",
+    "params": {
+      "script_import": "CONNECTORS_SOURCE.scrap_conector",
+      "class_name": "ScrapConnector",
+      "input_file": "INPUT_FILE/REL_CORTES_ABR.TXT"
+    }
+  },
+    "void_transform": {
+    "class": "transform",
+    "type": "void",
+    "params": {}
+  },
+  "load_g_sheet": {
+    "class": "load",
+    "type": "g_sheets",
+    "params": {
+      "sheet_id": "1sjPptD3eh2H1_nJ-aw3gyHupr4Z7RhjJeqGjGKMkOwU",
+      "update_range": "Página1!A:AZ"
+    }
+  },
+
+  "flow": "connector_txt_scrap->void_transform->load_g_sheet"
 }
 

@@ -1,3 +1,5 @@
 {
-  "path_json": "pipeline.json"
+  "path_json": "pipeline.json",
+    "token.json": "token.json",
+  "credentials.json": "credentials.json"
 }
