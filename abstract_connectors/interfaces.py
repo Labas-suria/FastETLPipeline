@@ -7,7 +7,7 @@ class AbstractExtract(ABC):
         pass
 
     @abstractmethod
-    def extract(self, data: list) -> list:
+    def extract(self) -> list:
         pass
 
 
