@@ -104,7 +104,22 @@
     "type": "void",
     "params": {}
   },
+  "extrct_postgresql": {
+    "class": "extract",
+    "type": "postgresql",
+    "params": {
+      "sql_query": "SELECT * FROM test_input;"
+    }
+  },
+  "load_postgresql": {
+    "class": "load",
+    "type": "postgresql",
+    "params": {
+      "db_file_path": "",
+      "table_name": "test_input"
+    }
+  },
 
-  "flow": "extrct_g_sheet->void_transform->load_mysql"
+  "flow": "extrct_g_sheet->void_transform->load_postgresql"
 }
 

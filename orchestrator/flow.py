@@ -8,6 +8,7 @@ from classes.csv import CSV
 from classes.g_workspace import auth
 from classes.g_workspace.sheets import Sheets
 from classes.mysql_db import MySQL
+from classes.postgresql_db import PostgreSQL
 from abstract_connectors.interfaces import AbstractTransform, AbstractExtract, AbstractLoad
 
 import main
@@ -91,6 +92,9 @@ def execute(list_pipe_config: list):
                         case 'mysql':
                             data_cache.append({"extracted": MySQL().extract(**node_params)})
 
+                        case 'postgresql':
+                            data_cache.append({"extracted": PostgreSQL().extract(**node_params)})
+
                         case _:
                             raise Exception(f"The node type '{node_type}' is not supported in extract class.")
                 case 'transform':
@@ -141,6 +145,9 @@ def execute(list_pipe_config: list):
                                                                                                  **node_params)})
                         case 'mysql':
                             data_cache.append({"loaded": MySQL().load(data=tmp_extr_data, **node_params)})
+
+                        case 'postgresql':
+                            data_cache.append({"loaded": PostgreSQL().load(data=tmp_extr_data, **node_params)})
 
                 case _:
                     raise Exception(f"The node class '{node_class}' is not supported in instantiator.")

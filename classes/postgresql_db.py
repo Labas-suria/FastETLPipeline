@@ -1,5 +1,4 @@
-import mysql.connector
-from mysql.connector import errorcode
+import psycopg
 
 import json
 import logging
@@ -13,14 +12,15 @@ config.fileConfig(os.path.join(MAIN_PATH, 'logging.conf'))
 logger = logging.getLogger(__name__)
 
 
-class MySQL:
-    """Class that abstracts interactions with a MySQL database."""
+class PostgreSQL:
+    """Class that abstracts interactions with a PostgreSQL database."""
+
     def __init__(self):
         try:
             with open("variables_paths.json") as j_file:
                 j_data = json.load(j_file)
                 try:
-                    mysql_config = j_data["mysql_config.json"]
+                    mysql_config = j_data["postgresql_config.json"]
                 except Exception as e:
                     logger.error(f"Error in variables_paths params: '{e}'")
                     raise
@@ -29,15 +29,8 @@ class MySQL:
                 j_data = json.load(j_file)
 
             self.config = j_data
-            self.conn = mysql.connector.connect(**self.config)
+            self.conn = psycopg.connect(**self.config)
             self.cursor = self.conn.cursor()
-        except mysql.connector.Error as err:
-            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-                logger.error("Something is wrong with your user name or password")
-                raise
-            if err.errno == errorcode.ER_BAD_DB_ERROR:
-                logger.error("Database does not exist")
-                raise
         except Exception as e:
             logger.error(e)
             raise
@@ -54,7 +47,7 @@ class MySQL:
             if "sql_query" in kwargs:
                 sql_query = kwargs["sql_query"]
             else:
-                raise Exception("To extract data from MySQL DB, the select 'sql_query' must be provided.")
+                raise Exception("To extract data from PostgreSQL DB, the select 'sql_query' must be provided.")
 
             if 'SELECT' not in sql_query.upper().split(' '):
                 e = Exception('The provided sql_query is not a SELECT query.')
@@ -87,16 +80,11 @@ class MySQL:
             if 'table_name' in kwargs:
                 table_name = kwargs['table_name']
             else:
-                raise Exception("To load data in MySQL DB, the 'table_name' must be provided.")
-            if 'headers' in kwargs:
-                headers = kwargs['headers']
-            else:
-                raise Exception("To load data in MySQL DB, the 'headers' must be provided.")
+                raise Exception("To load data in PostgreSQL DB, the 'table_name' must be provided.")
         except Exception as e:
             logger.error(f"Error in params: '{e}'")
             raise
 
-        headers_str = str(headers).replace('[', '').replace(']', '').replace("'", "")
         for row in data:
             values = row.copy()
             values_str = ''
@@ -107,7 +95,7 @@ class MySQL:
                 else:
                     values_str += r'%s'
 
-            sql_str = fr"insert into {table_name} ({headers_str}) values ({values_str});"
+            sql_str = fr"insert into {table_name} values ({values_str});"
             self.cursor.execute(sql_str, tuple(values))
             self.conn.commit()
             logger.info(f"Successfull insert: {sql_str}")
