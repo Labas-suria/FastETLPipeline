@@ -1,7 +1,3 @@
 {
-  "path_json": "pipeline.json",
-  "token.json": "token.json",
-  "credentials.json": "credentials.json",
-  "mysql_config.json": "mysql_config.json",
-  "postgresql_config.json": "postgresql_config.json"
+  "path_json": "pipeline.json"
 }
