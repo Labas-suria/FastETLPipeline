@@ -110,6 +110,6 @@ class MySQL:
             sql_str = fr"insert into {table_name} ({headers_str}) values ({values_str});"
             self.cursor.execute(sql_str, tuple(values))
             self.conn.commit()
-            logger.info(f"Successfull insert: {sql_str}")
+            logger.info(f"Successfull insert: {sql_str} {tuple(values)}")
 
         return f"Data successfull inserted into {table_name}!"
