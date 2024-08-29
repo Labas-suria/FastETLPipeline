@@ -1,6 +1,7 @@
 import logging
 import os
 from logging import config
+from queue import Queue
 
 from classes.txt import TXT
 from classes.transform import Transform
@@ -37,12 +38,14 @@ def __conector_caller(node_params: dict):
     return imp_class
 
 
-def execute(list_pipe_config: list):
+def execute(list_pipe_config: list, node_steps_list: Queue = None):
     """
     Gets list with pipiline nodes in order, and execute each step of pipeline.
 
+    :param node_steps_list: list with fineshed nodes in flow, to show in UI.
     :param list_pipe_config: list with dict nodes sorted by "flow" string in config file.
     """
+
     def get_first_data_in_cached_data(data_type: str) -> list:
         """
         Gets first data stored in data_cache for provided data_type, and remove it from cache.
@@ -153,10 +156,21 @@ def execute(list_pipe_config: list):
                     raise Exception(f"The node class '{node_class}' is not supported in instantiator.")
 
             logger.info(f"The '{node_name}' step is done!")
+            if node_steps_list is not None:
+                node_steps_list.put(node_name)
 
+    except KeyError as e:
+        logger.error(f"Key Error in pipeline_config file: missing {e} attribute in '{node_name}' node.")
+        if node_steps_list is not None:
+            node_steps_list.put('end')
+        raise
     except Exception as e:
-        logger.error(e)
+        logger.error(f"Invalid pipeline file sintax, check app documentation! Error: {e}")
+        if node_steps_list is not None:
+            node_steps_list.put('end')
         raise
 
     logger.info("Pipeline Fineshed!")
+    if node_steps_list is not None:
+        node_steps_list.put('end')
     return data_cache

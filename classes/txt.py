@@ -56,7 +56,7 @@ class TXT:
                     raise Exception("The 'last_line' is bigger then lines in file!")
                 tmp_last_line = self.last_line
             else:
-                tmp_last_line = (len(file_lines)-1)
+                tmp_last_line = (len(file_lines))
 
             tmp_first_line = self.first_line
 

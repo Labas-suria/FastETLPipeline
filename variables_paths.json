@@ -1,3 +1,6 @@
 {
-  "path_json": "pipeline.json"
+  "path_json": "PIPELINE_FILES/pipeline.json",
+  "pipeline_files_path": "PIPELINE_FILES",
+  "token.json": "token.json",
+  "credentials.json": "credentials.json"
 }
