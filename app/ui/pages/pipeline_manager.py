@@ -15,7 +15,9 @@ from flet import (
     TextField,
     ScrollMode,
     Text,
-    AlertDialog
+    AlertDialog,
+    Tabs,
+    Tab
 )
 import os
 
@@ -90,6 +92,38 @@ class PipelineManager:
             flow_input.value = ""
             self.page.update()
 
+        def open_variables(e):
+            bkp_page = self.page.controls.copy()
+            var_list, var_buttons = self.instantiate_variables_window(bkp_page)
+
+            content = Column(
+                controls=[
+                    Container(height=3),
+                    var_list,
+                    Divider(),
+                    var_buttons
+                ],
+                alignment=MainAxisAlignment.CENTER,
+                scroll=ScrollMode.ALWAYS
+            )
+
+            tab = Tabs(
+                selected_index=0,
+                animation_duration=200,
+                tabs=[
+                    Tab(
+                        text="Set Pipeline variables",
+                        icon=icons.LIST,
+                        content=content,
+                    )
+                ],
+                expand=1,
+                scrollable=True
+            )
+
+            self.page.controls = [tab]
+            self.page.update()
+
         def dropdown_update(e):
             node_descr_input.value, flow_input.value = self.get_cont_pipe_file_selected(file_name=load_pipe_drop.value)
             load_pipe_drop.options = self.get_pipeline_files_op_list()
@@ -117,6 +151,12 @@ class PipelineManager:
             on_click=delete_pipe,
         )
 
+        variables_button = TextButton(
+            text="Set Variabes",
+            icon=icons.FORMAT_LIST_BULLETED,
+            on_click=open_variables,
+        )
+
         load_pipe_drop = Dropdown(
             label="Select Pipeline",
             hint_text="Choose your Pipeline",
@@ -129,8 +169,12 @@ class PipelineManager:
         flow_input = TextField(label="Flow String")
 
         # Containers #####################
+        set_colum = Column(
+            controls=[create_button, variables_button],
+            alignment=MainAxisAlignment.CENTER
+        )
         head = Row(
-            controls=[create_button, lrg_blnk_spce, load_pipe_drop],
+            controls=[set_colum, lrg_blnk_spce, load_pipe_drop],
             alignment=MainAxisAlignment.START
         )
 
@@ -183,3 +227,114 @@ class PipelineManager:
     def delete_pipeline_file(self, file_name: str):
         file_path = os.path.join(self.path_pipe_files, file_name)
         os.remove(file_path)
+
+    def instantiate_variables_window(self, bkp_page):
+        with open("variables_paths.json") as j_file:
+            j_data = json.load(j_file)
+
+        def done(e):
+            dct_to_save = {}
+            try:
+                for item in var_list_col.controls:
+                    print(f"{item.controls[0].value}:{item.controls[1].value}")
+                    dct_to_save[item.controls[0].value] = item.controls[1].value
+
+                with open("variables_paths.json", 'w') as j_w_file:
+                    json.dump(dct_to_save, j_w_file)
+
+                error_window = AlertDialog(
+                    title=Text("Done!")
+                )
+                self.page.open(error_window)
+                self.page.update()
+
+                self.page.controls = bkp_page
+                self.page.update()
+
+            except Exception as err:
+                error_window = AlertDialog(
+                    title=Text("Error"),
+                    content=Text(value=str(err))
+                )
+                self.page.open(error_window)
+                self.page.update()
+
+        def cancel(e):
+            self.page.controls = bkp_page
+            self.page.update()
+
+        def add(e):
+            var_list_col.controls.append(
+                Row(
+                    controls=[
+                        TextField(label="New", value=""),
+                        TextField(value="")
+                    ],
+                    alignment=MainAxisAlignment.CENTER
+                )
+            )
+            self.page.update()
+
+        def remove(e):
+            var_list_col.controls.pop()
+            self.page.update()
+
+        # Elements ################################
+        done_button = TextButton(
+            text="Done",
+            icon=icons.DONE,
+            on_click=done
+        )
+
+        cancel_button = TextButton(
+            text="Cancel",
+            icon=icons.CANCEL_OUTLINED,
+            on_click=cancel
+        )
+
+        add_button = TextButton(
+            text="Add",
+            icon=icons.ADD,
+            on_click=add
+        )
+        remove_button = TextButton(
+            text="Remove",
+            icon=icons.REMOVE,
+            on_click=remove
+        )
+
+        # Containers ##############################
+
+        r_buttons = Row(
+            controls=[
+                add_button,
+                remove_button,
+                Container(width=50),
+                cancel_button,
+                done_button
+            ],
+            alignment=MainAxisAlignment.CENTER
+        )
+
+        var_list_col = Column(alignment=MainAxisAlignment.CENTER)
+
+        for var in j_data:
+            var_list_col.controls.append(
+                Row(
+                    controls=[
+                        TextField(label=var, value=var),
+                        TextField(value=j_data[var])
+                    ],
+                    alignment=MainAxisAlignment.CENTER
+                )
+            )
+        r_window = Column(
+            controls=[
+                var_list_col
+            ],
+            alignment=MainAxisAlignment.CENTER,
+            height=400,
+            scroll=ScrollMode.ALWAYS
+        )
+
+        return r_window, r_buttons
