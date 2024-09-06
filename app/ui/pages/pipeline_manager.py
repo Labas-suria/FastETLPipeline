@@ -236,7 +236,6 @@ class PipelineManager:
             dct_to_save = {}
             try:
                 for item in var_list_col.controls:
-                    print(f"{item.controls[0].value}:{item.controls[1].value}")
                     dct_to_save[item.controls[0].value] = item.controls[1].value
 
                 with open("variables_paths.json", 'w') as j_w_file:
