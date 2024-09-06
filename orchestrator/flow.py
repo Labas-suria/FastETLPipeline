@@ -77,6 +77,9 @@ def execute(list_pipe_config: list, node_steps_list: Queue = None):
                     match node_type:
                         case 'txt':
                             data_cache.append({"extracted": TXT(**node_params).extract()})
+                        case 'csv':
+                            data_cache.append({"extracted": CSV(**node_params).extract()})
+
                         case 'connector':
                             if 'script_import' not in node_params.keys() or 'class_name' not in node_params.keys():
                                 raise Exception("The 'script_import' and 'class_name' params must be sourced!")
@@ -123,7 +126,7 @@ def execute(list_pipe_config: list, node_steps_list: Queue = None):
                             data_cache.append({"transformed": tmp_extr_data})
 
                         case _:
-                            raise Exception(f"The node type '{node_type}' is not supported in extract class.")
+                            raise Exception(f"The node type '{node_type}' is not supported in transform class.")
 
                 case 'load':
                     tmp_extr_data = get_first_data_in_cached_data(data_type="transformed")

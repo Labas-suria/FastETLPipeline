@@ -48,7 +48,7 @@ class TXT:
         """
 
         try:
-            with open(self.path) as file:
+            with open(self.path, encoding='utf-8') as file:
                 file_lines = file.readlines().copy()
 
             if self.last_line is not None:

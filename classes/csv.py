@@ -15,7 +15,7 @@ class CSV:
     Class that abstract a .csv data manipulation.
     """
 
-    def __init__(self, data: list, **kwargs):
+    def __init__(self, data: list = None, **kwargs):
         """kwargs = params dict in pipeline.json"""
 
         self.data = data
@@ -33,6 +33,19 @@ class CSV:
                 writer.writerows(self.data)
                 logger.info(f"Output data loaded in: {str(self.file_path)}")
                 return self.file_path
+        except Exception as e:
+            logger.error(e)
+            raise
+
+    def extract(self) -> list:
+        lines = []
+        try:
+            with open(self.file_path, 'r', encoding='utf-8') as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    lines.append(row)
+                logger.info(f"Data extracted from: {self.file_path}")
+                return lines
         except Exception as e:
             logger.error(e)
             raise
