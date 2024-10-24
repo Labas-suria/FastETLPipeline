@@ -1,7 +1,7 @@
 import logging
 import os
+from pandas import DataFrame
 from logging import config
-
 import main
 
 MAIN_PATH = os.path.dirname(main.__file__)
@@ -11,76 +11,66 @@ logger = logging.getLogger(__name__)
 
 class TXT:
     """
-    Class that abstract a .txt data manipulation.
+    Class that abstracts .txt data manipulation and returns a DataFrame.
     """
+
     def __init__(self, **kwargs):
         """kwargs = params dict in pipeline.json"""
 
         self.last_line = None
         self.first_line = 0
         self.header_line = True
+
         try:
-            if 'path' in kwargs:
-                self.path = kwargs['path']
-            else:
-                raise Exception("To instantiate a TXT object, the 'path' to file must be provided.")
-            if 'header_line' in kwargs:
-                self.header_line = kwargs['header_line']
-            if 'first_line' in kwargs:
-                self.first_line = kwargs['first_line']
-            else:
-                raise Exception("To instantiate a TXT object, the 'first_line' int must be provided.")
-            if 'last_line' in kwargs:
-                self.last_line = kwargs['last_line']
-            if 'separator' in kwargs:
-                self.separator = kwargs['separator']
-            else:
-                raise Exception("To instantiate a TXT object, the 'separator' int must be provided.")
+            self.path = kwargs.get('path')
+            if not self.path:
+                raise ValueError("The 'path' to file must be provided.")
+
+            self.header_line = kwargs.get('header_line', True)
+            self.first_line = kwargs.get('first_line', 0)
+            self.last_line = kwargs.get('last_line')
+            self.separator = kwargs.get('separator')
+            if not self.separator:
+                raise ValueError("The 'separator' must be provided.")
+
         except Exception as e:
             logger.error(f"Error in params: '{e}'")
             raise
 
-    def extract(self) -> list:
+    def extract(self) -> DataFrame:
         """
-        Extracts data from .txt according to the node configuration provided in the "pipeline.json".
+        Extracts data from .txt according to the configuration provided in 'pipeline.json'.
 
-        :return: List of list with line from table.
+        :return: DataFrame with the extracted data.
         """
-
         try:
             with open(self.path, encoding='utf-8') as file:
-                file_lines = file.readlines().copy()
+                file_lines = file.readlines()
 
-            if self.last_line is not None:
-                if self.last_line > (len(file_lines)-1):
-                    raise Exception("The 'last_line' is bigger then lines in file!")
-                tmp_last_line = self.last_line
-            else:
-                tmp_last_line = (len(file_lines))
+            tmp_last_line = self.last_line if self.last_line is not None else len(file_lines)
+            if tmp_last_line > len(file_lines):
+                raise ValueError("The 'last_line' exceeds the total number of lines in the file.")
 
-            tmp_first_line = self.first_line
+            if self.first_line >= tmp_last_line:
+                raise ValueError("The 'first_line' must be lower than 'last_line'.")
 
-            if tmp_first_line >= tmp_last_line:
-                raise Exception("The 'first_line' must be lower then 'last_line'!")
-
-            headers_line = []
-            lines_list = []
             if self.header_line:
-                headers_line.append(file_lines[0].replace('\n', ''))
+                headers = file_lines[0].strip().split(self.separator)
+                data_start = self.first_line + 1
+            else:
+                headers = None
+                data_start = self.first_line
 
-            for index in range(tmp_first_line, tmp_last_line):
-                lines_list.append(file_lines[index].replace('\n', ''))
+            data = [
+                line.strip().split(self.separator)
+                for line in file_lines[data_start:tmp_last_line]
+            ]
 
-            return_list = []
-            headers_line = headers_line[0].split(self.separator)
-            return_list.append(headers_line)
-            for line in lines_list:
-                return_list.append(line.split(self.separator))
+            df = DataFrame(data, columns=headers if headers else None)
 
         except Exception as e:
-            logger.error(e)
+            logger.error(f"Error during extraction: {e}")
             raise
 
         logger.info(f"Data extracted from {self.path}")
-
-        return return_list
+        return df
