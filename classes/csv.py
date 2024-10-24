@@ -1,6 +1,6 @@
-import csv
 import logging
 import os
+from pandas import DataFrame, read_csv
 from logging import config
 
 import main
@@ -12,10 +12,10 @@ logger = logging.getLogger(__name__)
 
 class CSV:
     """
-    Class that abstract a .csv data manipulation.
+    Class that abstracts .csv data manipulation using pandas DataFrame.
     """
 
-    def __init__(self, data: list = None, **kwargs):
+    def __init__(self, data: DataFrame = None, **kwargs):
         """kwargs = params dict in pipeline.json"""
 
         self.data = data
@@ -26,26 +26,35 @@ class CSV:
             logger.error(e)
             raise e
 
-    def load(self):
+    def load(self) -> str:
+        """
+        Save the DataFrame to a CSV file.
+
+        :return: The path to the saved file.
+        """
         try:
-            with open(self.file_path, 'w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerows(self.data)
-                logger.info(f"Output data loaded in: {str(self.file_path)}")
-                return self.file_path
+            if self.data is None or self.data.empty:
+                raise ValueError("No data available to save.")
+
+            self.data.to_csv(self.file_path, index=False)
+            logger.info(f"Output data loaded in: {str(self.file_path)}")
+            return self.file_path
+
         except Exception as e:
-            logger.error(e)
+            logger.error(f"Error saving CSV: {e}")
             raise
 
-    def extract(self) -> list:
-        lines = []
+    def extract(self) -> DataFrame:
+        """
+        Extract data from a CSV file and return it as a DataFrame.
+
+        :return: DataFrame with the extracted data.
+        """
         try:
-            with open(self.file_path, 'r', encoding='utf-8') as file:
-                reader = csv.reader(file)
-                for row in reader:
-                    lines.append(row)
-                logger.info(f"Data extracted from: {self.file_path}")
-                return lines
+            df = read_csv(self.file_path)
+            logger.info(f"Data extracted from: {self.file_path}")
+            return df
+
         except Exception as e:
-            logger.error(e)
+            logger.error(f"Error extracting CSV: {e}")
             raise
