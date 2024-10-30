@@ -1,6 +1,7 @@
 import re
 import logging
 import os
+from pandas import DataFrame
 from logging import config
 
 import main
@@ -10,89 +11,66 @@ config.fileConfig(os.path.join(MAIN_PATH, 'logging.conf'))
 logger = logging.getLogger(__name__)
 
 DEFAULT_TRANSFORM_TYPES = ['remove', 'only', 'match_regex']
-FK_TRANSFORM_TYPES = ['remove', 'only']  # transform_types that needs a filter_keys
-REGX_TRANSFORM_TYPES = ['match_regex']  # transform_types that needs a str_regex
+FK_TRANSFORM_TYPES = ['remove', 'only']  # Types that require 'filter_keys'
+REGX_TRANSFORM_TYPES = ['match_regex']  # Types that require 'str_regex'
 
 
 class Transform:
     """
-    Class that abstract an implemented features for default data transformation.
+    Class that abstracts implemented features for default data transformation using DataFrames.
     """
 
-    def __init__(self, data: list, **kwargs):
+    def __init__(self, data: DataFrame, **kwargs):
         """kwargs = params dict in pipeline.json"""
 
         self.data = data
-        if "transform_type" in kwargs:
-            if kwargs["transform_type"] not in DEFAULT_TRANSFORM_TYPES:
-                e = Exception(f"The provided 'transform_type' is not accepted. Only {DEFAULT_TRANSFORM_TYPES} "
-                              f"are accepted to Transform object.")
-                logger.error(e)
-                raise e
 
-            self.transform_type = kwargs["transform_type"]
-        else:
-            e = Exception("To instantiate a Transform object, the 'transform_type' must be provided.")
-            logger.error(e)
-            raise e
+        # Validate transform_type
+        self.transform_type = kwargs.get("transform_type")
+        if not self.transform_type or self.transform_type not in DEFAULT_TRANSFORM_TYPES:
+            raise ValueError(
+                f"The provided 'transform_type' is not accepted. Only {DEFAULT_TRANSFORM_TYPES} are accepted."
+            )
 
+        # Validate filter_keys if required
         if self.transform_type in FK_TRANSFORM_TYPES:
-            if "filter_keys" in kwargs:
-                self.filter_keys = kwargs["filter_keys"]
-            else:
-                e = Exception(f"To {FK_TRANSFORM_TYPES} transform_types, filter_keys must be provided!")
-                logger.error(e)
-                raise e
+            self.filter_keys = kwargs.get("filter_keys")
+            if not self.filter_keys:
+                raise ValueError(f"'{self.transform_type}' requires 'filter_keys' to be provided.")
 
+        # Validate str_regex if required
         if self.transform_type in REGX_TRANSFORM_TYPES:
-            if "str_regex" in kwargs:
-                self.str_regex = kwargs["str_regex"]
-            else:
-                e = Exception(f"To {REGX_TRANSFORM_TYPES} transform_types, str_regex must be provided!")
-                logger.error(e)
-                raise e
+            self.str_regex = kwargs.get("str_regex")
+            if not self.str_regex:
+                raise ValueError(f"'{self.transform_type}' requires 'str_regex' to be provided.")
 
-    def apply(self) -> list:
+    def apply(self) -> DataFrame:
+        """
+        Apply the transformation to the DataFrame based on the provided transform type.
 
+        :return: Transformed DataFrame.
+        """
         try:
             match self.transform_type:
                 case "remove":
-                    tmp_data = []
-                    for line in self.data:
-                        tmp_line = []
-                        for item in line:
-                            if item in self.filter_keys:
-                                tmp_line.append("")
-                            else:
-                                tmp_line.append(item)
-                        tmp_data.append(tmp_line)
+                    transformed_data = self.data.applymap(
+                        lambda x: "" if x in self.filter_keys else x
+                    )
 
                 case "only":
-                    tmp_data = []
-                    for line in self.data:
-                        tmp_line = []
-                        for item in line:
-                            if item not in self.filter_keys:
-                                tmp_line.append("")
-                            else:
-                                tmp_line.append(item)
-                        tmp_data.append(tmp_line)
+                    transformed_data = self.data.applymap(
+                        lambda x: x if x in self.filter_keys else ""
+                    )
 
                 case "match_regex":
-                    tmp_data = []
-                    for line in self.data:
-                        tmp_line = []
-                        for item in line:
-                            item_match = re.search(self.str_regex, item)
-                            if item_match:
-                                tmp_line.append(item)
-                            else:
-                                tmp_line.append("")
-                        tmp_data.append(tmp_line)
+                    regex = re.compile(self.str_regex)
+                    transformed_data = self.data.applymap(
+                        lambda x: x if regex.search(str(x)) else ""
+                    )
+
+            logger.info(f"Filter '{self.transform_type}' applied to the DataFrame.")
+            return transformed_data
+
         except Exception as e:
-            logger.error(e)
+            logger.error(f"Error during transformation: {e}")
             raise
-
-        logger.info(f"Filter '{self.transform_type}' applied in sourced data.")
-
-        return tmp_data
