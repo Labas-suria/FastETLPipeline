@@ -1,5 +1,5 @@
 import psycopg
-
+import pandas as pd
 import json
 import logging
 import os
@@ -13,19 +13,19 @@ logger = logging.getLogger(__name__)
 
 
 class PostgreSQL:
-    """Class that abstracts interactions with a PostgreSQL database."""
+    """Class that abstracts interactions with a PostgreSQL database using DataFrames."""
 
     def __init__(self):
         try:
             with open("variables_paths.json") as j_file:
                 j_data = json.load(j_file)
                 try:
-                    mysql_config = j_data["postgresql_config.json"]
+                    postgresql_config = j_data["postgresql_config.json"]
                 except Exception as e:
                     logger.error(f"Error in variables_paths params: '{e}'")
                     raise
 
-            with open(mysql_config) as j_file:
+            with open(postgresql_config) as j_file:
                 j_data = json.load(j_file)
 
             self.config = j_data
@@ -35,69 +35,53 @@ class PostgreSQL:
             logger.error(e)
             raise
 
-    def extract(self, **kwargs):
+    def extract(self, sql_query: str) -> pd.DataFrame:
         """
-        Executes a SELECT query on the given database.
+        Executes a SELECT query and returns the result as a DataFrame.
 
-        :param sql_query: String with the SQL query, must be of type SELECT.
-
-        :return: A list of lists containing the query rows.
+        :param sql_query: SQL query string, must be a SELECT query.
+        :return: DataFrame with the query results.
         """
         try:
-            if "sql_query" in kwargs:
-                sql_query = kwargs["sql_query"]
-            else:
-                raise Exception("To extract data from PostgreSQL DB, the select 'sql_query' must be provided.")
+            if 'SELECT' not in sql_query.upper().split():
+                raise ValueError('The provided sql_query is not a SELECT query.')
 
-            if 'SELECT' not in sql_query.upper().split(' '):
-                e = Exception('The provided sql_query is not a SELECT query.')
-                logger.error(e)
-                raise e
-
-            list_return = []
             self.cursor.execute(sql_query)
-            for tpl in self.cursor.fetchall():
-                list_return.append(list(tpl))
+            data = self.cursor.fetchall()
+            columns = [desc[0] for desc in self.cursor.description]
 
-            logger.info(f"SELECT query {sql_query} done successfully!")
-            return list_return
+            df = pd.DataFrame(data, columns=columns)
+            logger.info(f"SELECT query '{sql_query}' executed successfully!")
+            return df
 
         except Exception as e:
-            logger.error(e)
+            logger.error(f"Error during extraction: {e}")
             raise
 
-    def load(self, data: list, **kwargs):
+    def load(self, data: pd.DataFrame, table_name: str):
         """
-        Executes an INSERT query in the database, providing a list of headers and
-        a list with the lists containing the lines with the values.
+        Inserts the data from a DataFrame into the specified table.
 
-        :param table_name: Name of the table where the data will be included.
-        :param headers: List with the names of the columns where the data will be inserted.
-        :param data: List with lists of values to be inserted into the table. lists with values must have the
-        same size with the 'headers' list.
+        :param data: DataFrame with the data to insert.
+        :param table_name: Name of the target table in the database.
         """
         try:
-            if 'table_name' in kwargs:
-                table_name = kwargs['table_name']
-            else:
-                raise Exception("To load data in PostgreSQL DB, the 'table_name' must be provided.")
-        except Exception as e:
-            logger.error(f"Error in params: '{e}'")
-            raise
+            if data.empty:
+                raise ValueError("The DataFrame is empty. No data to insert.")
 
-        for row in data:
-            values = row.copy()
-            values_str = ''
+            columns = data.columns
+            headers_str = ', '.join(columns)
+            values_str = ', '.join(['%s'] * len(columns))
 
-            for index in range(0, len(row)):
-                if index < len(row) - 1:
-                    values_str += r'%s, '
-                else:
-                    values_str += r'%s'
+            sql_query = f"INSERT INTO {table_name} ({headers_str}) VALUES ({values_str})"
 
-            sql_str = fr"insert into {table_name} values ({values_str});"
-            self.cursor.execute(sql_str, tuple(values))
+            for _, row in data.iterrows():
+                self.cursor.execute(sql_query, tuple(row))
+
             self.conn.commit()
-            logger.info(f"Successfull insert: {sql_str} {tuple(values)}")
+            logger.info(f"Data successfully inserted into {table_name}!")
+            return f"Data successfully inserted into {table_name}!"
 
-        return f"Data successfull inserted into {table_name}!"
+        except Exception as e:
+            logger.error(f"Error during insertion: {e}")
+            raise
