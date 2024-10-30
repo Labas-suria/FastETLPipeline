@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 
-import pandas as pd
+from pandas import DataFrame
 import json
 import logging
 import os
@@ -47,7 +47,7 @@ class MySQL:
             logger.error(e)
             raise
 
-    def extract(self, sql_query: str) -> pd.DataFrame:
+    def extract(self, sql_query: str) -> DataFrame:
         """
         Executes a SELECT query on the given database and returns a DataFrame.
 
@@ -62,7 +62,7 @@ class MySQL:
             data = self.cursor.fetchall()
             columns = [desc[0] for desc in self.cursor.description]
 
-            df = pd.DataFrame(data, columns=columns)
+            df = DataFrame(data, columns=columns)
             logger.info(f"SELECT query '{sql_query}' executed successfully!")
             return df
 
@@ -70,7 +70,7 @@ class MySQL:
             logger.error(f"Error during extraction: {e}")
             raise
 
-    def load(self, data: pd.DataFrame, table_name: str):
+    def load(self, data: DataFrame, table_name: str):
         """
         Executes an INSERT query into the database using data from a DataFrame.
 

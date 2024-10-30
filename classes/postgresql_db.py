@@ -1,5 +1,5 @@
 import psycopg
-import pandas as pd
+from pandas import DataFrame
 import json
 import logging
 import os
@@ -35,7 +35,7 @@ class PostgreSQL:
             logger.error(e)
             raise
 
-    def extract(self, sql_query: str) -> pd.DataFrame:
+    def extract(self, sql_query: str) -> DataFrame:
         """
         Executes a SELECT query and returns the result as a DataFrame.
 
@@ -50,7 +50,7 @@ class PostgreSQL:
             data = self.cursor.fetchall()
             columns = [desc[0] for desc in self.cursor.description]
 
-            df = pd.DataFrame(data, columns=columns)
+            df = DataFrame(data, columns=columns)
             logger.info(f"SELECT query '{sql_query}' executed successfully!")
             return df
 
@@ -58,7 +58,7 @@ class PostgreSQL:
             logger.error(f"Error during extraction: {e}")
             raise
 
-    def load(self, data: pd.DataFrame, table_name: str):
+    def load(self, data: DataFrame, table_name: str):
         """
         Inserts the data from a DataFrame into the specified table.
 
