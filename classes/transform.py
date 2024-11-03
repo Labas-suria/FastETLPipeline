@@ -1,7 +1,7 @@
 import re
 import logging
 import os
-from pandas import DataFrame
+from pandas import DataFrame, notnull
 from logging import config
 
 import main
@@ -10,7 +10,7 @@ MAIN_PATH = os.path.dirname(main.__file__)
 config.fileConfig(os.path.join(MAIN_PATH, 'logging.conf'))
 logger = logging.getLogger(__name__)
 
-DEFAULT_TRANSFORM_TYPES = ['remove', 'only', 'match_regex']
+DEFAULT_TRANSFORM_TYPES = ['remove', 'only', 'match_regex', 'nan_to_none']
 FK_TRANSFORM_TYPES = ['remove', 'only']  # Types that require 'filter_keys'
 REGX_TRANSFORM_TYPES = ['match_regex']  # Types that require 'str_regex'
 
@@ -67,6 +67,9 @@ class Transform:
                     transformed_data = self.data.applymap(
                         lambda x: x if regex.search(str(x)) else ""
                     )
+
+                case "nan_to_none":
+                    transformed_data = self.data.where(notnull(self.data), None)
 
             logger.info(f"Filter '{self.transform_type}' applied to the DataFrame.")
             return transformed_data
