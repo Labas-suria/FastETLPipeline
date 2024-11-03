@@ -1,7 +1,7 @@
 import logging
 import os
 from logging import config
-from pandas import DataFrame
+from pandas import DataFrame, notnull
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
@@ -35,6 +35,9 @@ class Sheets:
         :param update_range: String with the update range. Ex: 'Sheet1!A:AZ'
         :param data: DataFrame with the data to be added to the spreadsheet.
         """
+        # google api crash with NAN ;-;
+        data = data.where(notnull(data), None)
+
         try:
             update_range = kwargs.get('update_range')
             if not update_range:
