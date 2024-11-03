@@ -152,7 +152,7 @@ class PipelineManager:
         )
 
         variables_button = TextButton(
-            text="Set Variabes",
+            text="Set Variables",
             icon=icons.FORMAT_LIST_BULLETED,
             on_click=open_variables,
         )
