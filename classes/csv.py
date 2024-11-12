@@ -35,8 +35,8 @@ class CSV:
         try:
             if self.data is None or self.data.empty:
                 raise ValueError("No data available to save.")
-
-            self.data.to_csv(self.file_path, index=False)
+            print(self.data["director"])
+            self.data.to_csv(self.file_path, index=False, encoding="utf-8")
             logger.info(f"Output data loaded in: {str(self.file_path)}")
             return self.file_path
 
