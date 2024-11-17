@@ -1,8 +1,8 @@
 # FastETLPipeline
 
-O FastETLPipeline é uma aplicação python desenvolvida para fornecer uma plataforma para criação e execução de pipelines ETL para dados de forma fácil e simplificada.
+O FastETLPipeline é uma aplicação python desenvolvida com o objetivo de fornecer uma plataforma para criação e execução de pipelines ETL para dados de forma fácil e simplificada.
 
-Ferramenta ideal para pequenos times de dados que têm o seu foco na análise, simplificando todo o processo de extração, transformação e carga dos dados que precede a criação das visualizações e dashboards.
+Ferramenta ideal para pequenos times de dados que têm seu foco na análise, simplificando todo o processo de extração, transformação e carga dos dados que precede a criação das visualizações e dashboards.
 
 # Features
 1. TXT (extração)
@@ -33,6 +33,7 @@ Para extrair dados de um arquivo ".txt" é necessário que o nó de extração n
                    (7)"last_line": "",
                    (8)"header_line": true
             }
+ }
 ```
 
 1. **"extract_node_name"** - A string que dá nome ao nó.
@@ -57,6 +58,7 @@ Para extrair dados de um arquivo ".csv" é necessário que o nó de extração n
             "params": {
                    (4)"file_path": "path\\to\\file.csv",
             }
+}
 ```
 
 1. **"extract_node_name"** - A string que dá nome ao nó.
@@ -73,6 +75,7 @@ Para carregar os dados em um arquivo ".csv" é necessário que o nó de carga no
             "params": {
                    (4)"file_path": "path\\to\\file.csv",
             }
+}
 ```
 
 1. **"load_node_name"** - A string que dá nome ao nó.
@@ -96,6 +99,7 @@ Para extrair os dados de uma planilha no Google Sheets é necessário que o nó 
                    (4)"sheet_id": "sheetidstring123",
                    (5)"extract_range": "pagename!A:AZ"
             }
+}
 ```
 
 1. **"extract_node_name"** - A string que dá nome ao nó.
