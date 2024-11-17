@@ -5,19 +5,17 @@ O FastETLPipeline é uma aplicação python desenvolvida com o objetivo de forne
 Ferramenta ideal para pequenos times de dados que têm seu foco na análise, simplificando todo o processo de extração, transformação e carga dos dados que precede a criação das visualizações e dashboards.
 
 # Features
-1. TXT (extração)
-2. CSV (extração e load)
-3. Google Sheets (extração e load)
-4. MySQL (extração e load)
+1. [TXT (extração)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#txt)
+2. [CSV (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#csv)
+3. [Google Sheets (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#google-sheets)
+4. [MySQL (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#mysql)
 5. 
 ## TXT
 A aplicação permite a extração de dados de arquivos ".txt", desde que os dados estejam em um padrão tabular, permitindo a extração dos valores de cada coluna dado um separador determinado na configuração do nó.
 > Ex: 
 > 
 > a, b, c
-> 
 > 1, 2, 3
-> 
 > z, x, y
 > 
 > É possível extrair os dados do .txt acima, configurando o separador como uma vírgula.
