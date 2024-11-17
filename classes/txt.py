@@ -47,19 +47,20 @@ class TXT:
             with open(self.path, encoding='utf-8') as file:
                 file_lines = file.readlines()
 
-            tmp_last_line = self.last_line if self.last_line is not None else len(file_lines)
+            tmp_last_line = self.last_line + 1 if self.last_line is not None else len(file_lines)
+
+            if self.header_line:
+                headers = file_lines.pop(0).strip().split(self.separator)
+                data_start = self.first_line
+            else:
+                headers = None
+                data_start = self.first_line
+
             if tmp_last_line > len(file_lines):
                 raise ValueError("The 'last_line' exceeds the total number of lines in the file.")
 
             if self.first_line >= tmp_last_line:
                 raise ValueError("The 'first_line' must be lower than 'last_line'.")
-
-            if self.header_line:
-                headers = file_lines[0].strip().split(self.separator)
-                data_start = self.first_line + 1
-            else:
-                headers = None
-                data_start = self.first_line
 
             data = [
                 line.strip().split(self.separator)
