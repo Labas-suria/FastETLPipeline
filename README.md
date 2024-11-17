@@ -15,7 +15,9 @@ A aplicação permite a extração de dados de arquivos ".txt", desde que os dad
 > Ex: 
 > 
 > a, b, c
+> 
 > 1, 2, 3
+> 
 > z, x, y
 > 
 > É possível extrair os dados do .txt acima, configurando o separador como uma vírgula.
