@@ -9,7 +9,7 @@ Ferramenta ideal para pequenos times de dados que têm seu foco na análise, sim
 2. [CSV (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#csv)
 3. [Google Sheets (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#google-sheets)
 4. [MySQL (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#mysql)
-5. 
+5. [PostgreSQL (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#postgresql)
 ## TXT
 A aplicação permite a extração de dados de arquivos ".txt", desde que os dados estejam em um padrão tabular, permitindo a extração dos valores de cada coluna dado um separador determinado na configuração do nó.
 > Ex: 
