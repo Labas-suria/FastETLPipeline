@@ -178,7 +178,6 @@ Para carregar dados em uma tabela em um banco de dados MySQL é necessário que 
 	 (3)"type": "mysql",
 	 "params": {
 		 (4)"table_name": "tablename",
-		 (5)"headers": ["h1", "h2"]
 	 }
  }
 ```
@@ -187,4 +186,55 @@ Para carregar dados em uma tabela em um banco de dados MySQL é necessário que 
 2. **"class": "extract"** - Esta descrição determina para o orquestrador que o nó é da classe de extração. 
 3. **"type": "mysql"** - Esta descrição determina para o orquestrador que o o tipo da extração será "mysql". Ou seja, os dados serão extraídos de um arquivo banco de dados MySQL.
 4.  **"table_name"** - Aqui deverá ser passada a string com o nome de tabela onde os dados serão carregados.
-5.  **"headers"** - Lista com os nomes das colunas onde os dados serão armazenados na tabela.
+
+## PostgreSQL
+A aplicação permite a extração e carga de dados de bancos de dados PostgreSQL. Para a utilização da classe é necessário o arquivo *postgresql_config.json* com as credenciais de acesso para o banco de dados.
+O arquivo *postgresql_config.json* deverá ter as seguintes informações:
+```JSON
+{
+	"user": "user_name",
+	"password": "userpassword",
+	"host": "iptodatabase",
+	"database": "databasename"
+}
+```
+Uma vez que o arquivo *postgresql_config.json* foi criado, é necessário que seja configurado na opção "Set Variables" da aplicação ou diretamente no arquivo "variables_paths.json" do projeto a variável que possuirá o caminho para o arquivo *postgresql_config.json*.
+>variables_paths.json:
+>"postgresql_config.json": "C:\\todo\\caminho\\ate\\postgresql_config.json"
+
+>Opção Set Variables:
+> **Na primeira caixa**: postgresql_config.json, **na segunda caixa**: C:\\todo\\caminho\\ate\\postgresql_config.json
+
+### EXTRAINDO dados de um banco de dados PostgreSQL:
+Para extrair dados de uma tabela em um banco de dados PostgreSQL é necessário que o nó de extração no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
+```JSON
+ (1)"extract_node_name": {
+	 (2)"class": "extract",
+	 (3)"type": "postgresql",
+	 "params": {
+		 (4)"sql_query": "SELECT * FROM table_name;"
+	 }
+ }
+```
+
+1. **"extract_node_name"** - A string que dá nome ao nó.
+2. **"class": "extract"** - Esta descrição determina para o orquestrador que o nó é da classe de extração. 
+3. **"type": "postgresql"** - Esta descrição determina para o orquestrador que o o tipo da extração será "postgresql". Ou seja, os dados serão extraídos de um arquivo banco de dados PostgreSQL.
+4.  **"sql_query"** - Aqui deverá ser passada a string com a query do tipo select que extrairá os dados da tabela.
+
+### CARREGANDO dados em um banco de dados PostgreSQL:
+Para carregar dados em uma tabela em um banco de dados PostgreSQL é necessário que o nó de carga no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
+```JSON
+ (1)"load_node_name": {
+	 (2)"class": "load",
+	 (3)"type": "postgresql",
+	 "params": {
+		 (4)"table_name": "tablename",
+	 }
+ }
+```
+
+1. **"extract_node_name"** - A string que dá nome ao nó.
+2. **"class": "extract"** - Esta descrição determina para o orquestrador que o nó é da classe de extração. 
+3. **"type": "postgresql"** - Esta descrição determina para o orquestrador que o o tipo da extração será "postgresql". Ou seja, os dados serão extraídos de um arquivo banco de dados PostgreSQL.
+4.  **"table_name"** - Aqui deverá ser passada a string com o nome de tabela onde os dados serão carregados.
