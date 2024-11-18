@@ -25,15 +25,15 @@ A aplicação permite a extração de dados de arquivos ".txt", desde que os dad
 ### EXTRAINDO dados de um txt:
 Para extrair dados de um arquivo ".txt" é necessário que o nó de extração no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
 ```JSON
- (1)"extract_node_name": {
-            (2)"class": "extract", 
-            (3)"type": "txt",
+ "(1)extract_node_name": {
+            "(2)class": "extract", 
+            "(3)type": "txt",
             "params": {
-                   (4)"path": "path\\to\\file.txt",
-                   (5)"separator": "",
-                   (6)"first_line": "",
-                   (7)"last_line": "",
-                   (8)"header_line": true
+                   "(4)path": "path\\to\\file.txt",
+                   "(5)separator": "",
+                   "(6)first_line": "",
+                   "(7)last_line": "",
+                   "(8)header_line": true
             }
  }
 ```
@@ -54,11 +54,11 @@ A aplicação permite a extração e carga de dados de arquivos ".csv". Extraind
 ### EXTRAINDO dados de um csv:
 Para extrair dados de um arquivo ".csv" é necessário que o nó de extração no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
 ```JSON
- (1)"extract_node_name": {
-            (2)"class": "extract", 
-            (3)"type": "csv",
+ "(1)extract_node_name": {
+            "(2)class": "extract", 
+            "(3)type": "csv",
             "params": {
-                   (4)"file_path": "path\\to\\file.csv",
+                   "(4)file_path": "path\\to\\file.csv",
             }
 }
 ```
@@ -71,11 +71,11 @@ Para extrair dados de um arquivo ".csv" é necessário que o nó de extração n
 ### CARREGANDO dados em um csv:
 Para carregar os dados em um arquivo ".csv" é necessário que o nó de carga no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
 ```JSON
- (1)"load_node_name": {
-            (2)"class": "load", 
-            (3)"type": "csv",
+ "(1)load_node_name": {
+            "(2)class": "load", 
+            "(3)type": "csv",
             "params": {
-                   (4)"file_path": "path\\to\\file.csv",
+                   "(4)file_path": "path\\to\\file.csv",
             }
 }
 ```
@@ -94,12 +94,12 @@ Uma vez que o arquivo "credentials.json" foi gerado, o salve na pasta raíz do p
 Para extrair os dados de uma planilha no Google Sheets é necessário que o nó de extração no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
 
 ```JSON
- (1)"extract_node_name": {
-            (2)"class": "extract", 
-            (3)"type": "g_sheets",
+ "(1)extract_node_name": {
+            "(2)class": "extract", 
+            "(3)type": "g_sheets",
             "params": {
-                   (4)"sheet_id": "sheetidstring123",
-                   (5)"extract_range": "pagename!A:AZ"
+                   "(4)sheet_id": "sheetidstring123",
+                   "(5)extract_range": "pagename!A:AZ"
             }
 }
 ```
@@ -118,12 +118,12 @@ Se a extração correr corretamente os dados da página serão armazenados em um
 Para carregar os dados em uma planilha no Google Sheets é necessário que o nó de extração no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
 
 ```JSON
- (1)"load_node_name": {
-            (2)"class": "load", 
-            (3)"type": "g_sheets",
+ "(1)load_node_name": {
+            "(2)class": "load", 
+            "(3)type": "g_sheets",
             "params": {
-                   (4)"sheet_id": "sheetidstring123",
-                   (5)"update_range": "pagename!A:AZ"
+                   "(4)sheet_id": "sheetidstring123",
+                   "(5)update_range": "pagename!A:AZ"
             }
 }
 ```
@@ -158,11 +158,11 @@ Uma vez que o arquivo *mysql_config.json* foi criado, é necessário que seja co
 ### EXTRAINDO dados de um banco de dados MySQL:
 Para extrair dados de uma tabela em um banco de dados MySQL é necessário que o nó de extração no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
 ```JSON
- (1)"extract_node_name": {
-	 (2)"class": "extract",
-	 (3)"type": "mysql",
+ "(1)extract_node_name": {
+	 "(2)class": "extract",
+	 "(3)type": "mysql",
 	 "params": {
-		 (4)"sql_query": "SELECT * FROM table_name;"
+		 "(4)sql_query": "SELECT * FROM table_name;"
 	 }
  }
 ```
@@ -175,11 +175,11 @@ Para extrair dados de uma tabela em um banco de dados MySQL é necessário que o
 ### CARREGANDO dados em um banco de dados MySQL:
 Para carregar dados em uma tabela em um banco de dados MySQL é necessário que o nó de carga no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
 ```JSON
- (1)"load_node_name": {
-	 (2)"class": "load",
-	 (3)"type": "mysql",
+ "(1)load_node_name": {
+	 "(2)class": "load",
+	 "(3)type": "mysql",
 	 "params": {
-		 (4)"table_name": "tablename",
+		 "(4)table_name": "tablename",
 	 }
  }
 ```
@@ -210,11 +210,11 @@ Uma vez que o arquivo *postgresql_config.json* foi criado, é necessário que se
 ### EXTRAINDO dados de um banco de dados PostgreSQL:
 Para extrair dados de uma tabela em um banco de dados PostgreSQL é necessário que o nó de extração no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
 ```JSON
- (1)"extract_node_name": {
-	 (2)"class": "extract",
-	 (3)"type": "postgresql",
+ "(1)extract_node_name": {
+	 "(2)class": "extract",
+	 "(3)type": "postgresql",
 	 "params": {
-		 (4)"sql_query": "SELECT * FROM table_name;"
+		 "(4)sql_query": "SELECT * FROM table_name;"
 	 }
  }
 ```
@@ -227,11 +227,11 @@ Para extrair dados de uma tabela em um banco de dados PostgreSQL é necessário 
 ### CARREGANDO dados em um banco de dados PostgreSQL:
 Para carregar dados em uma tabela em um banco de dados PostgreSQL é necessário que o nó de carga no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
 ```JSON
- (1)"load_node_name": {
-	 (2)"class": "load",
-	 (3)"type": "postgresql",
+ "(1)load_node_name": {
+	 "(2)class": "load",
+	 "(3)type": "postgresql",
 	 "params": {
-		 (4)"table_name": "tablename",
+		 "(4)table_name": "tablename",
 	 }
  }
 ```
