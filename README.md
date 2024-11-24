@@ -11,9 +11,9 @@ Ferramenta ideal para pequenos times de dados que têm seu foco na análise, sim
 4. [MySQL (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#mysql)
 5. [PostgreSQL (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#postgresql)
 6. Conectores (extração, load e transformação)
-	1. Conector para extração
-	2. Conector para transformação
-	3. Conector para carga
+	1. [Conector para extração](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-extra%C3%A7%C3%A3o)
+	2. [Conector para transformação](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-transforma%C3%A7%C3%A3o)
+	3. [Conector para carga](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-carga)
 ## TXT
 A aplicação permite a extração de dados de arquivos ".txt", desde que os dados estejam em um padrão tabular, permitindo a extração dos valores de cada coluna dado um separador determinado na configuração do nó.
 > Ex: 
