@@ -10,6 +10,10 @@ Ferramenta ideal para pequenos times de dados que têm seu foco na análise, sim
 3. [Google Sheets (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#google-sheets)
 4. [MySQL (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#mysql)
 5. [PostgreSQL (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#postgresql)
+6. Conectores (extração, load e transformação)
+	1. Conector para extração
+	2. Conector para transformação
+	3. Conector para carga
 ## TXT
 A aplicação permite a extração de dados de arquivos ".txt", desde que os dados estejam em um padrão tabular, permitindo a extração dos valores de cada coluna dado um separador determinado na configuração do nó.
 > Ex: 
@@ -240,3 +244,136 @@ Para carregar dados em uma tabela em um banco de dados PostgreSQL é necessário
 2. **"class": "extract"** - Esta descrição determina para o orquestrador que o nó é da classe de extração. 
 3. **"type": "postgresql"** - Esta descrição determina para o orquestrador que o o tipo da extração será "postgresql". Ou seja, os dados serão extraídos de um arquivo banco de dados PostgreSQL.
 4.  **"table_name"** - Aqui deverá ser passada a string com o nome de tabela onde os dados serão carregados.
+## Conectores
+A aplicação permite que o usuário possa acoplar código Python em qualquer etapa do ETL, seja para extração, transformação ou carga.
+
+Um “conector” é uma classe escrita pelo usuário, que herda de uma das classes abstratas (conforme a operação que for realizar: AbstractExtract para extração, AbstractTransform para transformação e AbstractLoad para carga) e implementa o único método abstrato assinado em cada uma.
+
+Para isso, o script com o código deve estar dentro da pasta “CONNECTOR_SOURCE” na raiz do projeto
+### Conector para extração
+Para acoplar na pipeline um conector para extração, o script implementado deve ter o seguinte padrão:
+```Python
+from abstract_connectors.interfaces import AbstractExtract
+
+class ClassName(AbstractExtract):  
+    def __init__(self, **kwargs):  
+        ""Aqui você deve inicializar os atributos necessários à sua classe. 
+        É uma boa prática que os parâmetros sejam passados dentro do 
+        dicionário “params” no nó correspondente no arquivo de configuração 
+        da pipeline (.json).""  
+        
+        self.atributo = kwargs['meu_atributo'] # exemplo, variavel receberá "params": { ..., "meu_atributo": "valor", ...}.
+  
+    def extract(self) -> DataFrame:
+	    ""Aqui o código para extração será escrito. É obrigatório que, 
+	    mesmo que não seja utilizado na extração, método deverá retornar 
+	    os dados como um pandas.Dataframe""
+```
+
+Uma vez que o seu código esteja na pasta “CONNECTOR_SOURCE” e implemente "AbstractExtract", é necessário que o nó de extração no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
+
+```JSON
+ "(1)connector_node_name": {
+	 "(2)class": "extract",
+	 "(3)type": "connector",
+	 "params": {
+		 "(4)script_import": "CONNECTORS_SOURCE.script_name", 
+		 "(5)class_name": "ClassName", 
+		 "(6)atributo_1": "valor_atributo_1",
+		 "(6)atributo_1": "valor_atributo_2",
+		 "(6)atributo_n": "valor_atributo_n"
+	}
+ }
+```
+1. **"connector_node_name"** - A string que dá nome ao nó.
+2. **"class": "extract"** - Esta descrição determina para o orquestrador que o nó é da classe de extração. 
+3. **"type": "connector"** - Esta descrição determina para o orquestrador que o o tipo da extração será "connector". Ou seja, os dados serão extraídos da fonte/forma que o usuário implementar. 
+4.  **"script_import"** - Aqui deverá ser passada a string com o nome do script (.py) dentro da pasta "CONNECTORS_SOURCE".
+5. **"class_name"** - Aqui deverá passada a string com o nome da classe escrita no script pelo usuário.
+6. **Atributos** - Poderão ser adicionados aqui os atributos para inicialização da classe (um caminho para um arquivo de credenciais, uma url, entre outros). 
+
+### Conector para transformação
+>**Importante:** O seu método para transformação receberá um pandas.Dataframe.
+>
+Para acoplar na pipeline um conector para transformação, o script implementado deve ter o seguinte padrão:
+```Python
+from abstract_connectors.interfaces import AbstractTransform
+
+class ClassName(AbstractTransform):  
+    def __init__(self, data: DataFrame, **kwargs):  
+        ""Aqui você deve inicializar os atributos necessários à sua classe. 
+        É uma boa prática que os parâmetros sejam passados dentro do 
+        dicionário “params” no nó correspondente no arquivo de configuração 
+        da pipeline (.json).""  
+        
+       self.data = data # Variável que guarda o Dataframe recebido da pipeline.
+  
+    def apply(self) -> DataFrame:
+	    ""Aqui o código para transformação será escrito. É obrigatório que, 
+	    mesmo que não seja utilizado na transformação, método deverá retornar 
+	    os dados como um pandas.Dataframe""
+```
+
+Uma vez que o seu código esteja na pasta “CONNECTOR_SOURCE” e implemente "AbstractTransform", é necessário que o nó de transformação no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
+
+```JSON
+ "(1)connector_node_name": {
+	 "(2)class": "transform",
+	 "(3)type": "connector",
+	 "params": {
+		 "(4)script_import": "CONNECTORS_SOURCE.script_name", 
+		 "(5)class_name": "ClassName", 
+		 "(6)atributo_1": "valor_atributo_1",
+		 "(6)atributo_1": "valor_atributo_2",
+		 "(6)atributo_n": "valor_atributo_n"
+	}
+ }
+```
+1. **"connector_node_name"** - A string que dá nome ao nó.
+2. **"class": "transform"** - Esta descrição determina para o orquestrador que o nó é da classe de transformação. 
+3. **"type": "connector"** - Esta descrição determina para o orquestrador que o o tipo da transformação será "connector". Ou seja, os dados serão transformados da forma que o usuário implementar. 
+4.  **"script_import"** - Aqui deverá ser passada a string com o nome do script (.py) dentro da pasta "CONNECTORS_SOURCE".
+5. **"class_name"** - Aqui deverá passada a string com o nome da classe escrita no script pelo usuário.
+6. **Atributos** - Poderão ser adicionados aqui os atributos para inicialização da classe. 
+
+### Conector para carga
+>**Importante:** O seu método para carga receberá um pandas.Dataframe.
+>
+Para acoplar na pipeline um conector para transformação, o script implementado deve ter o seguinte padrão:
+```Python
+from abstract_connectors.interfaces import AbstractLoad
+
+class ClassName(AbstractLoad):  
+    def __init__(self, data: DataFrame, **kwargs):  
+        ""Aqui você deve inicializar os atributos necessários à sua classe. 
+        É uma boa prática que os parâmetros sejam passados dentro do 
+        dicionário “params” no nó correspondente no arquivo de configuração 
+        da pipeline (.json).""  
+        
+       self.data = data # Variável que guarda o Dataframe recebido da pipeline.
+  
+    def load(self):
+	    ""Aqui o código para carga será escrito.""
+```
+
+Uma vez que o seu código esteja na pasta “CONNECTOR_SOURCE” e implemente "AbstractLoad", é necessário que o nó de carga no arquivo de configuração da pipeline (.json) tenha a seguinte configuração:
+
+```JSON
+ "(1)connector_node_name": {
+	 "(2)class": "load",
+	 "(3)type": "connector",
+	 "params": {
+		 "(4)script_import": "CONNECTORS_SOURCE.script_name", 
+		 "(5)class_name": "ClassName", 
+		 "(6)atributo_1": "valor_atributo_1",
+		 "(6)atributo_1": "valor_atributo_2",
+		 "(6)atributo_n": "valor_atributo_n"
+	}
+ }
+```
+1. **"connector_node_name"** - A string que dá nome ao nó.
+2. **"class": "load"** - Esta descrição determina para o orquestrador que o nó é da classe de carga. 
+3. **"type": "connector"** - Esta descrição determina para o orquestrador que o o tipo da carga será "connector". Ou seja, os dados serão carregado na fonte/forma que o usuário implementar. 
+4.  **"script_import"** - Aqui deverá ser passada a string com o nome do script (.py) dentro da pasta "CONNECTORS_SOURCE".
+5. **"class_name"** - Aqui deverá passada a string com o nome da classe escrita no script pelo usuário.
+6. **Atributos** - Poderão ser adicionados aqui os atributos para inicialização da classe (um caminho para um arquivo de credenciais, uma url, entre outros). 
