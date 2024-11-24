@@ -10,7 +10,7 @@ Ferramenta ideal para pequenos times de dados que têm seu foco na análise, sim
 3. [Google Sheets (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#google-sheets)
 4. [MySQL (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#mysql)
 5. [PostgreSQL (extração e load)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#postgresql)
-6. Conectores (extração, load e transformação)
+6. [Conectores (extração, load e transformação)](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conectores)
 	1. [Conector para extração](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-extra%C3%A7%C3%A3o)
 	2. [Conector para transformação](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-transforma%C3%A7%C3%A3o)
 	3. [Conector para carga](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-carga)
