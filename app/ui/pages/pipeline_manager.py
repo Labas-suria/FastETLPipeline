@@ -38,7 +38,12 @@ class PipelineManager:
             def handle_create(e):
                 file_path = os.path.join(self.path_pipe_files, txt_field.value+".json")
                 with open(file_path, "w") as arquivo:
-                    arquivo.write('{\n"node":"empty",\n"node2":"empty",\n"flow":"node->node2"\n}')
+                    arquivo.write('{'
+                                  '\n"node":{"class": "extract", "type": "---", "params": {}},'
+                                  '\n"node2":{"class": "transform", "type": "---", "params": {}},'
+                                  '\n"node3":{"class": "load", "type": "---", "params": {}},'
+                                  '\n"flow":"node->node2->node3"'
+                                  '\n}')
                 load_pipe_drop.options = self.get_pipeline_files_op_list()
                 self.page.update()
                 self.page.close(create_window)
