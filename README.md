@@ -14,6 +14,9 @@ Ferramenta ideal para pequenos times de dados que têm seu foco na análise, sim
 	1. [Conector para extração](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-extra%C3%A7%C3%A3o)
 	2. [Conector para transformação](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-transforma%C3%A7%C3%A3o)
 	3. [Conector para carga](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-carga)
+7. Transformações
+	1. Void 
+	2. Default
 ## TXT
 A aplicação permite a extração de dados de arquivos ".txt", desde que os dados estejam em um padrão tabular, permitindo a extração dos valores de cada coluna dado um separador determinado na configuração do nó.
 > Ex: 
@@ -377,3 +380,84 @@ Uma vez que o seu código esteja na pasta “CONNECTOR_SOURCE” e implemente "A
 4.  **"script_import"** - Aqui deverá ser passada a string com o nome do script (.py) dentro da pasta "CONNECTORS_SOURCE".
 5. **"class_name"** - Aqui deverá passada a string com o nome da classe escrita no script pelo usuário.
 6. **Atributos** - Poderão ser adicionados aqui os atributos para inicialização da classe (um caminho para um arquivo de credenciais, uma url, entre outros). 
+
+## Transformações
+A aplicação pode realizar transformações de três tipos: 
+
+1. Connector - Transformações acopladas à pipeline pelo usuário. É o tipo de transformação explicado em "Conector para transformação"
+2. Void - Nó que não aplica nenhuma transformação nos dados da pipeline.
+3. Default - Transformações implementadas nativamente na aplicação.
+
+### Transformação do tipo Void 
+A aplicação sempre deverá executar uma pipeline ETL, ou seja, sempre deverá ter um nó de transformação (assim como extração e carga). 
+
+Para as pipelines onde não se deseja tratar os dados, existe a transformação do tipo void, onde o dado não sofrerá transformação alguma. Para essa transformação o nó de extração no arquivo de configuração da pipeline (.json) deve ter a seguinte configuração:
+```JSON
+ "(1)transform_node_name": {
+	 "class": "transform",
+	 "type": "void",
+	 "params": {}
+ }
+```
+1. **"connector_node_name"** - A string que dá nome ao nó.
+
+### Transformação do tipo Default 
+A aplicação oferece nativamente alguns tipos de transformações nos dados:
+1. **remove** - Remove da base de dados todos valores que sejam iguais aos valores contidos na lista "filter_keys".
+>Configuração do nó:
+>```JSON
+> "(1)transform_node_name": {
+>      "class": "transform",
+>	 "type": "default",
+>	 "params": {
+>          "transform_type": "remove",
+>          "(2)filter_keys": ["aaaa","bbbbb"]
+>      }
+>}
+>```
+>1. **"transform_node_name"** - A string que dá nome ao nó.
+>2. **filter_keys"** - Lista com os itens que serão removidos dos dados.
+
+2. **only** - Remove da base de dados todos valores que sejam diferentes aos valores contidos na lista "filter_keys".
+>Configuração do nó:
+>```JSON
+> "(1)transform_node_name": {
+>      "class": "transform",
+>	 "type": "default",
+>	 "params": {
+>          "transform_type": "only",
+>          "(2)filter_keys": ["aaaa","bbbbb"]
+>      }
+>}
+>```
+>1. **"transform_node_name"** - A string que dá nome ao nó.
+>2. **filter_keys"** - Lista com os itens que serão mantidos dos dados.
+
+3. **match_regex** - É análogo ao "only", mas recebe como parâmetro uma expressão regular no lugar da lista. Removendo da base todos os valores que fujam ao padrão determinado pela "str_regex".
+>Configuração do nó:
+>```JSON
+> "(1)transform_node_name": {
+>      "class": "transform",
+>	 "type": "default",
+>	 "params": {
+>          "transform_type": "match_regex",
+>          "(2)str_regex": "regexpattern"
+>      }
+>}
+>```
+>1. **"transform_node_name"** - A string que dá nome ao nó.
+>2. **str_regex"** - String com a expressão regular.
+4. **nan_to_none** - Transforma os valores NaN no Dataframe em None (Null).
+>Configuração do nó:
+>```JSON
+> "(1)transform_node_name": {
+>      "class": "transform",
+>	 "type": "default",
+>	 "params": {
+>          "transform_type": "match_regex",
+>          "(2)str_regex": "regexpattern"
+>      }
+>}
+>```
+>1. **"transform_node_name"** - A string que dá nome ao nó.
+>2. **str_regex"** - String com a expressão regular.
