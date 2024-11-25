@@ -14,9 +14,9 @@ Ferramenta ideal para pequenos times de dados que têm seu foco na análise, sim
 	1. [Conector para extração](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-extra%C3%A7%C3%A3o)
 	2. [Conector para transformação](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-transforma%C3%A7%C3%A3o)
 	3. [Conector para carga](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-carga)
-7. Transformações
-	1. Void 
-	2. Default
+7. [Transformações](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#transforma%C3%A7%C3%B5es)
+	1. [Void](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#transforma%C3%A7%C3%A3o-do-tipo-void) 
+	2. [Default](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#transforma%C3%A7%C3%A3o-do-tipo-default)
 ## TXT
 A aplicação permite a extração de dados de arquivos ".txt", desde que os dados estejam em um padrão tabular, permitindo a extração dos valores de cada coluna dado um separador determinado na configuração do nó.
 > Ex: 
@@ -384,7 +384,7 @@ Uma vez que o seu código esteja na pasta “CONNECTOR_SOURCE” e implemente "A
 ## Transformações
 A aplicação pode realizar transformações de três tipos: 
 
-1. Connector - Transformações acopladas à pipeline pelo usuário. É o tipo de transformação explicado em "Conector para transformação"
+1. Connector - Transformações acopladas à pipeline pelo usuário. É o tipo de transformação explicado em "[Conector para transformação](https://github.com/Labas-suria/FastETLPipeline/tree/dev_list_to_dataframe?tab=readme-ov-file#conector-para-transforma%C3%A7%C3%A3o)"
 2. Void - Nó que não aplica nenhuma transformação nos dados da pipeline.
 3. Default - Transformações implementadas nativamente na aplicação.
 
