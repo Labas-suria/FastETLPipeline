@@ -92,7 +92,9 @@ def execute(list_pipe_config: list, node_steps_list: Queue = None):
                 case 'transform':
                     extracted_data = get_first_data_in_cached_data("extracted")
                     if extracted_data.empty:
-                        raise ValueError("No extracted data available for transformation.")
+                        extracted_data = get_first_data_in_cached_data("transformed")
+                        if extracted_data.empty:
+                            raise ValueError("No extracted data available for transformation.")
 
                     match node_type:
                         case 'default':
