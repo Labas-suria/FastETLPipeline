@@ -1,0 +1,1 @@
+{"extract_info_view": {"class": "extract", "type": "csv", "params": {"file_path": "C:\\airflow_inst\\views_info.csv"}}, "transform": {"class": "transform", "type": "default", "params": {"transform_type": "drop_nan"}}, "load": {"class": "load", "type": "csv", "params": {"file_path": "C:\\Users\\Lenovo\\Desktop\\views_info.csv"}}, "flow": "extract_info_view->transform->load"}

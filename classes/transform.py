@@ -10,7 +10,7 @@ MAIN_PATH = os.path.dirname(main.__file__)
 config.fileConfig(os.path.join(MAIN_PATH, 'logging.conf'))
 logger = logging.getLogger(__name__)
 
-DEFAULT_TRANSFORM_TYPES = ['remove', 'only', 'match_regex', 'nan_to_none', 'drop_duplicates']
+DEFAULT_TRANSFORM_TYPES = ['remove', 'only', 'match_regex', 'nan_to_none', 'drop_duplicates', 'drop_nan']
 FK_TRANSFORM_TYPES = ['remove', 'only']  # Types that require 'filter_keys'
 REGX_TRANSFORM_TYPES = ['match_regex']  # Types that require 'str_regex'
 
@@ -81,6 +81,9 @@ class Transform:
 
                 case "drop_duplicates":
                     transformed_data = self.data.drop_duplicates(subset=self.subset, keep=self.keep)
+
+                case "drop_nan":
+                    transformed_data = self.data.dropna()
 
             logger.info(f"Filter '{self.transform_type}' applied to the DataFrame.")
             return transformed_data
