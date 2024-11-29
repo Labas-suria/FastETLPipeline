@@ -454,10 +454,26 @@ A aplicação oferece nativamente alguns tipos de transformações nos dados:
 >      "class": "transform",
 >	 "type": "default",
 >	 "params": {
->          "transform_type": "match_regex",
->          "(2)str_regex": "regexpattern"
+>          "transform_type": "nan_to_none"
 >      }
 >}
 >```
 >1. **"transform_node_name"** - A string que dá nome ao nó.
->2. **str_regex"** - String com a expressão regular.
+
+
+5. **drop_duplicates** - Remove linhas duplicadas no DataFrame.  
+>Configuração do nó:  
+>```JSON  
+> "(1)transform_node_name": {
+>  "class": "transform",
+>  "type": "default",
+>  "params": {
+>       "transform_type": "drop_duplicates",
+>       "(2)subset": ["col1",  "col2"],
+>       "(3)keep": "first"
+>      }
+> }  
+>```  
+>1. **"transform_node_name"** - A string que dá nome ao nó.  
+>2. **"subset"** - Lista com os nomes das colunas consideradas ao verificar duplicados.
+>3. **"keep"** - Define qual duplicata manter: 'first' (padrão), Mantém a primeira ocorrência e remove as demais; 'last', Mantém a última ocorrência e remove as anteriores; False, Remove todas as duplicatas.

@@ -10,7 +10,7 @@ MAIN_PATH = os.path.dirname(main.__file__)
 config.fileConfig(os.path.join(MAIN_PATH, 'logging.conf'))
 logger = logging.getLogger(__name__)
 
-DEFAULT_TRANSFORM_TYPES = ['remove', 'only', 'match_regex', 'nan_to_none']
+DEFAULT_TRANSFORM_TYPES = ['remove', 'only', 'match_regex', 'nan_to_none', 'drop_duplicates']
 FK_TRANSFORM_TYPES = ['remove', 'only']  # Types that require 'filter_keys'
 REGX_TRANSFORM_TYPES = ['match_regex']  # Types that require 'str_regex'
 
@@ -44,6 +44,14 @@ class Transform:
             if not self.str_regex:
                 raise ValueError(f"'{self.transform_type}' requires 'str_regex' to be provided.")
 
+        if kwargs.get("transform_type") == "drop_duplicates":
+            self.subset = kwargs.get("subset")
+
+            if kwargs.get("keep") is None:
+                self.keep = 'first'
+            else:
+                self.keep = kwargs.get("keep")
+
     def apply(self) -> DataFrame:
         """
         Apply the transformation to the DataFrame based on the provided transform type.
@@ -70,6 +78,9 @@ class Transform:
 
                 case "nan_to_none":
                     transformed_data = self.data.where(notnull(self.data), None)
+
+                case "drop_duplicates":
+                    transformed_data = self.data.drop_duplicates(subset=self.subset, keep=self.keep)
 
             logger.info(f"Filter '{self.transform_type}' applied to the DataFrame.")
             return transformed_data
