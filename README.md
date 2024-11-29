@@ -477,3 +477,16 @@ A aplicação oferece nativamente alguns tipos de transformações nos dados:
 >1. **"transform_node_name"** - A string que dá nome ao nó.  
 >2. **"subset"** - Lista com os nomes das colunas consideradas ao verificar duplicados.
 >3. **"keep"** - Define qual duplicata manter: 'first' (padrão), Mantém a primeira ocorrência e remove as demais; 'last', Mantém a última ocorrência e remove as anteriores; False, Remove todas as duplicatas.
+
+6. **drop_nan** - Remove linhas com valores NaN no DataFrame.  
+>Configuração do nó:  
+>```JSON  
+> "(1)transform_node_name": {
+>  "class": "transform",
+>  "type": "default",
+>  "params": {
+>       "transform_type": "drop_nan",
+>      }
+> }  
+>```  
+>1. **"transform_node_name"** - A string que dá nome ao nó.
