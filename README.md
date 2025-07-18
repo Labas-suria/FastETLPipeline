@@ -490,3 +490,18 @@ A aplicação oferece nativamente alguns tipos de transformações nos dados:
 > }  
 >```  
 >1. **"transform_node_name"** - A string que dá nome ao nó.
+>
+7. **query** - Realiza uma consulta no DataFrame, utilizando a mesma sintaxe da consulta utilizada no query do Pandas.  
+>Configuração do nó:  
+>```JSON  
+> "(1)transform_node_name": {
+>  "class": "transform",
+>  "type": "default",
+>  "params": {
+>       "transform_type": "query",
+>	"(2) str_query": "query string"
+>      }
+> }  
+>```  
+>1. **"transform_node_name"** - A string que dá nome ao nó.
+>2. **"str_query"** - A string contendo a consulta que o programa realizará no dataset.
